@@ -42,16 +42,10 @@ export function SocialLinks({ className, iconClassName }: SocialLinksProps) {
     },
   ].filter(Boolean) as { label: string; href: string; Icon: React.ComponentType<{ className?: string }> }[]
 
-  // Fallback: show disabled-looking placeholders so structure is visible.
-  const showPlaceholders = items.length === 0
+  if (items.length === 0) return null
 
   return (
     <div className={cn('flex items-center gap-1', className)}>
-      {showPlaceholders && (
-        <span className="text-xs text-muted-foreground">
-          [Ishika: add LinkedIn / GitHub / email in content/site.ts]
-        </span>
-      )}
       {items.map(({ label, href, Icon }) => (
         <a
           key={label}

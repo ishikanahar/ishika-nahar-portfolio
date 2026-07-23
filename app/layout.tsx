@@ -23,7 +23,7 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://ishika.dev'),
+  metadataBase: new URL('https://ishikanahar.com'),
   title: {
     default: 'Ishika — Applied AI, Data Science & Machine Learning',
     template: '%s · Ishika',
@@ -32,6 +32,7 @@ export const metadata: Metadata = {
     'UC San Diego student building practical, reliable AI systems from data to product. Portfolio of applied machine learning, AI evaluation, and data science work across healthcare, behavioral, and biomedical data.',
   keywords: [
     'Ishika',
+    'Ishika Nahar',
     'Applied AI',
     'Machine Learning',
     'Data Science',
@@ -40,13 +41,14 @@ export const metadata: Metadata = {
     'LLM Evaluation',
     'Computer Vision',
   ],
-  authors: [{ name: 'Ishika' }],
+  authors: [{ name: 'Ishika Nahar' }],
   openGraph: {
     title: 'Ishika — Applied AI, Data Science & Machine Learning',
     description:
       'Building practical, reliable AI systems from data to product. Applied ML, AI evaluation, and data science portfolio.',
     type: 'website',
     locale: 'en_US',
+    url: 'https://ishikanahar.com',
   },
   twitter: {
     card: 'summary_large_image',
@@ -58,10 +60,12 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
   colorScheme: 'light dark',
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f7f6f2' },
-    { media: '(prefers-color-scheme: dark)', color: '#0f1a24' },
+    { media: '(prefers-color-scheme: light)', color: '#e8f2ee' },
+    { media: '(prefers-color-scheme: dark)', color: '#1a1228' },
   ],
 }
 
@@ -76,7 +80,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} bg-background`}
     >
-      <body className="font-sans antialiased">
+      <body className="overflow-x-hidden font-sans antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

@@ -33,7 +33,7 @@ export function SiteFooter() {
           <div className="flex flex-col gap-3 md:items-end">
             <SocialLinks />
             <nav className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground">
-              <Link href="/work" className="hover:text-foreground">Work</Link>
+              <Link href="/work" className="hover:text-foreground">Projects</Link>
               <Link href="/experience" className="hover:text-foreground">Experience</Link>
               <Link href="/about" className="hover:text-foreground">About</Link>
               <Link href="/contact" className="hover:text-foreground">Contact</Link>

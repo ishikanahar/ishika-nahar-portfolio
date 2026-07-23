@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Style-Adaptive Extraction — Ishika Nahar</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #181818;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0f0f0;
+    --muted: #888;
+    --dim: #555;
+    --teal: #2dd4a0;
+    --teal-dim: rgba(45,212,160,0.12);
+    --teal-border: rgba(45,212,160,0.3);
+    --red-dim: rgba(255,100,80,0.1);
+    --red: #ff6450;
+    --amber: #f5a623;
+    --amber-dim: rgba(245,166,35,0.1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--teal);
+  }
+
+  .topbar-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: 0.01em;
+  }
+
+  .topbar-sub {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .topbar-author {
+    font-size: 12px;
+    color: var(--dim);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 16px;
+  }
+
+  .intro-block {
+    margin-bottom: 40px;
+  }
+
+  .intro-block h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .intro-block p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 620px;
+  }
+
+  .problem-strip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 40px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .problem-item {
+    flex: 1;
+    min-width: 160px;
+  }
+
+  .problem-item .p-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+    margin-bottom: 6px;
+  }
+
+  .problem-item .p-val {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .problem-item .p-val span {
+    color: var(--teal);
+    font-weight: 500;
+  }
+
+  .note-selector {
+    margin-bottom: 24px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    padding: 7px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .tab:hover { border-color: var(--border2); color: var(--text); }
+
+  .tab.active {
+    background: var(--teal-dim);
+    border-color: var(--teal-border);
+    color: var(--teal);
+  }
+
+  .note-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+  }
+
+  .note-box .nb-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .note-box .nb-doctor {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .style-badge {
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--amber-dim);
+    color: var(--amber);
+    border: 1px solid rgba(245,166,35,0.2);
+    font-weight: 500;
+  }
+
+  .note-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    color: var(--text);
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+
+  .run-btn {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 8px;
+    border: 1px solid var(--teal-border);
+    background: var(--teal-dim);
+    color: var(--teal);
+    cursor: pointer;
+    margin-bottom: 28px;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.01em;
+  }
+
+  .run-btn:hover:not(:disabled) {
+    background: rgba(45,212,160,0.18);
+    border-color: rgba(45,212,160,0.5);
+  }
+
+  .run-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .pipeline-steps {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .pipe-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--dim);
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+
+  .pipe-step.done {
+    color: var(--teal);
+    border-color: var(--teal-border);
+    background: var(--teal-dim);
+  }
+
+  .pipe-step.running {
+    color: var(--amber);
+    border-color: rgba(245,166,35,0.3);
+    background: var(--amber-dim);
+  }
+
+  .pipe-arrow {
+    font-size: 10px;
+    color: var(--dim);
+  }
+
+  .dot-pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: pulse 1s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+
+  .results-section {
+    display: none;
+  }
+
+  .results-section.visible {
+    display: block;
+  }
+
+  .comparison-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 2px;
+  }
+
+  .col-head {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0 0 8px 0;
+  }
+
+  .col-head.generic { color: var(--dim); }
+  .col-head.adaptive { color: var(--teal); }
+
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+
+  .result-card.adaptive {
+    border-color: var(--teal-border);
+    background: rgba(45,212,160,0.04);
+  }
+
+  .accuracy-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .accuracy-bar-wrap {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .accuracy-bar {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.8s ease;
+  }
+
+  .accuracy-bar.low { background: var(--red); }
+  .accuracy-bar.high { background: var(--teal); }
+
+  .accuracy-num {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    min-width: 32px;
+    text-align: right;
+  }
+
+  .accuracy-num.low { color: var(--red); }
+  .accuracy-num.high { color: var(--teal); }
+
+  .field-block {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .field-block:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .field-key {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+    margin-bottom: 4px;
+  }
+
+  .field-val {
+    font-size: 12.5px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .field-val.missing {
+    color: var(--red);
+    font-style: italic;
+    font-size: 12px;
+  }
+
+  .field-val.found {
+    color: var(--teal);
+  }
+
+  .insight-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--teal);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+
+  .insight-card .ic-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--teal);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .insight-card p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .cite-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 8px;
+  }
+
+  .cite-card .cite-title {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .cite-card .cite-sub {
+    font-size: 11px;
+    color: var(--dim);
+    line-height: 1.5;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 32px 0;
+  }
+
+  .footer-note {
+    font-size: 11px;
+    color: var(--dim);
+    line-height: 1.7;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .highlight { color: var(--teal); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo-dot"></div>
+    <div>
+      <div class="topbar-title">Style-Adaptive Clinical Note Extraction</div>
+      <div class="topbar-sub">Proof of concept — oncology NLP pipeline</div>
+    </div>
+  </div>
+  <div class="topbar-author">Ishika Nahar · UCSD · 2026</div>
+</div>
+
+<div class="main">
+
+  <div class="intro-block">
+    <div class="section-label">The problem</div>
+    <h1>One extraction prompt can't serve every physician's writing style</h1>
+    <p>Tempus processes billions of clinical notes from hundreds of institutions. But oncologists write radically differently — some terse and abbreviated, some narrative, some uncertainty-heavy. A single generic LLM extraction prompt treats all notes the same, creating silent failures that pass human review undetected.</p>
+  </div>
+
+  <div class="problem-strip">
+    <div class="problem-item">
+      <div class="p-label">Tempus dataset scale</div>
+      <div class="p-val"><span>7B+</span> clinical notes across institutions</div>
+    </div>
+    <div class="problem-item">
+      <div class="p-label">Current approach</div>
+      <div class="p-val">One generic extraction prompt applied uniformly</div>
+    </div>
+    <div class="problem-item">
+      <div class="p-label">The blind spot</div>
+      <div class="p-val">Style variation causes <span>silent extraction failures</span> — confident but wrong</div>
+    </div>
+    <div class="problem-item">
+      <div class="p-label">Proposed fix</div>
+      <div class="p-val">Classify style first → route to <span>adapted prompt</span></div>
+    </div>
+  </div>
+
+  <div class="section-label">Interactive demo — select a note</div>
+
+  <div class="note-selector">
+    <div class="tabs">
+      <button class="tab active" onclick="selectNote(0)">Dr. A — terse</button>
+      <button class="tab" onclick="selectNote(1)">Dr. B — narrative</button>
+      <button class="tab" onclick="selectNote(2)">Dr. C — uncertainty-heavy</button>
+    </div>
+
+    <div class="note-box">
+      <div class="nb-header">
+        <span class="nb-doctor" id="note-doctor">Dr. A · Oncology</span>
+        <span class="style-badge" id="style-badge">Terse / abbreviation-heavy</span>
+      </div>
+      <div class="note-text" id="note-text"></div>
+    </div>
+  </div>
+
+  <button class="run-btn" id="run-btn" onclick="runExtraction()">
+    → Run extraction comparison
+  </button>
+
+  <div class="pipeline-steps" id="pipeline-steps">
+    <div class="pipe-step" id="step1">
+      <span>1. Classify style</span>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step" id="step2">
+      <span>2. Generic prompt</span>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step" id="step3">
+      <span>3. Style-adapted prompt</span>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step" id="step4">
+      <span>4. Compare</span>
+    </div>
+  </div>
+
+  <div class="results-section" id="results-section">
+
+    <div class="comparison-header">
+      <div class="col-head generic">Generic prompt output</div>
+      <div class="col-head adaptive">Style-adapted output</div>
+    </div>
+
+    <div class="comparison-grid">
+      <div class="result-card" id="generic-card">
+        <div class="accuracy-line">
+          <div class="accuracy-bar-wrap">
+            <div class="accuracy-bar low" id="generic-bar" style="width:0%"></div>
+          </div>
+          <div class="accuracy-num low" id="generic-score">—</div>
+        </div>
+        <div id="generic-fields"></div>
+      </div>
+      <div class="result-card adaptive" id="adaptive-card">
+        <div class="accuracy-line">
+          <div class="accuracy-bar-wrap">
+            <div class="accuracy-bar high" id="adaptive-bar" style="width:0%"></div>
+          </div>
+          <div class="accuracy-num high" id="adaptive-score">—</div>
+        </div>
+        <div id="adaptive-fields"></div>
+      </div>
+    </div>
+
+    <div class="insight-card">
+      <div class="ic-label">Why the gap exists</div>
+      <p id="insight-text"></p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-label">Research foundation</div>
+
+    <div class="cite-card">
+      <div class="cite-title">Brake & Schaaf (2024) — Personalized Clinical Note Generation from Doctor-Patient Conversations</div>
+      <div class="cite-sub">Showed that modeling physician-specific writing style improves NLP output quality by up to 88.6% on key sections. Focused on note generation — this prototype applies the same insight to the extraction side.</div>
+    </div>
+
+    <div class="cite-card">
+      <div class="cite-title">Informatik / MDPI (2025) — Preprocessing of Physician Notes by LLMs Improves Clinical Concept Extraction</div>
+      <div class="cite-sub">Demonstrated that writing style variability, abbreviations, and non-standard formatting degrade downstream NLP pipeline accuracy. Proposed normalizing notes before extraction — this work proposes adapting the prompt instead, preserving clinical nuance.</div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="footer-note">
+    prototype built by ishika nahar &nbsp;·&nbsp; uc san diego &nbsp;·&nbsp;
+    cognitive science (ml + neural computation) + neurobiology &nbsp;·&nbsp;
+    <span class="highlight">inahar@ucsd.edu</span>
+  </div>
+
+</div>
+
+<script>
+const NOTES = [
+  {
+    doctor: "Dr. A · Oncology",
+    styleBadge: "Terse / abbreviation-heavy",
+    text: `Pt: 62F. Dx: Stage IIIB NSCLC. FOLFOX C4 complete. Tolerating well. Wt stable. Next: CT chest 4wks, continue current regimen. f/u oncology 6wks.`,
+    generic: {
+      score: 58,
+      fields: [
+        { key: "Diagnosis", val: "NSCLC", ok: true },
+        { key: "Stage", val: "Stage IIIB", ok: true },
+        { key: "Treatment", val: "FOLFOX", ok: true },
+        { key: "Treatment intent", val: "not extracted — no explicit curative/palliative language", ok: false },
+        { key: "Next steps", val: "CT chest, follow-up — timing missed (abbreviations)", ok: false }
+      ]
+    },
+    adaptive: {
+      score: 94,
+      fields: [
+        { key: "Diagnosis", val: "Non-small cell lung cancer (NSCLC)", ok: true },
+        { key: "Stage", val: "Stage IIIB", ok: true },
+        { key: "Treatment", val: "FOLFOX chemotherapy, cycle 4 complete", ok: true },
+        { key: "Treatment intent", val: "Curative-intent — active chemo + scheduled imaging", ok: true },
+        { key: "Next steps", val: "CT chest in 4 weeks; oncology follow-up in 6 weeks", ok: true }
+      ]
+    },
+    insight: "The generic prompt searched for explicit keywords like 'curative' or 'palliative' and found nothing. The style-adapted prompt was pre-informed this physician writes tersely, so it inferred treatment intent from the context — active chemotherapy continuing with scheduled imaging signals curative intent without ever stating it."
+  },
+  {
+    doctor: "Dr. B · Oncology",
+    styleBadge: "Narrative / verbose",
+    text: `The patient is a 58-year-old female who was originally diagnosed with breast cancer approximately fourteen months ago and has been receiving Herceptin-based therapy since that time. She came in today for her routine follow-up visit and reports that she has been feeling generally well, with some mild fatigue that she attributes to the treatment itself. On examination she appears comfortable and her weight has remained relatively stable compared to our last visit. We discussed her most recent imaging results which were reassuring and showed no evidence of new metastatic disease. The plan at this time is to continue her current treatment regimen and we will see her back in the clinic in approximately eight weeks.`,
+    generic: {
+      score: 51,
+      fields: [
+        { key: "Diagnosis", val: "Breast cancer", ok: true },
+        { key: "Stage", val: "not extracted — no explicit staging language", ok: false },
+        { key: "Treatment", val: "Herceptin", ok: true },
+        { key: "Treatment intent", val: "not extracted — no curative/palliative keywords", ok: false },
+        { key: "Next steps", val: "follow-up in 8 weeks — imaging status ambiguous", ok: false }
+      ]
+    },
+    adaptive: {
+      score: 91,
+      fields: [
+        { key: "Diagnosis", val: "Breast cancer, HER2-positive (inferred from Herceptin therapy)", ok: true },
+        { key: "Stage", val: "Metastatic ruled out — no new metastatic disease on imaging", ok: true },
+        { key: "Treatment", val: "Herceptin (trastuzumab)-based therapy, ongoing 14+ months", ok: true },
+        { key: "Treatment intent", val: "Maintenance — active monitoring, no escalation", ok: true },
+        { key: "Next steps", val: "Continue current regimen; clinic follow-up ~8 weeks", ok: true }
+      ]
+    },
+    insight: "The generic prompt extracted surface-level facts but missed the clinical inference that Herceptin implies HER2-positive disease, and that 'no new metastatic disease' is a meaningful staging signal. The style-adapted prompt was primed for indirect clinical language and extracted embedded inferences — exactly how a trained human abstractor would read this note."
+  },
+  {
+    doctor: "Dr. C · Oncology",
+    styleBadge: "Uncertainty-heavy / hedged",
+    text: `Findings from today's imaging may be consistent with possible early progression, though this could also represent treatment-related inflammation. Would consider reassessing in 4–6 weeks before making any changes to the current protocol. Patient appears to be tolerating therapy reasonably well overall, though some fatigue has been reported. If symptoms worsen or imaging at next visit suggests definitive progression, would likely escalate to second-line options at that time.`,
+    generic: {
+      score: 29,
+      fields: [
+        { key: "Diagnosis", val: "not extracted — no confirmed diagnosis statement", ok: false },
+        { key: "Stage", val: "not extracted", ok: false },
+        { key: "Treatment", val: "current protocol — unspecified", ok: false },
+        { key: "Treatment intent", val: "not extracted — conflicting continuation vs. escalation signals", ok: false },
+        { key: "Next steps", val: "reassess in 4–6 weeks — conditional logic not parsed", ok: false }
+      ]
+    },
+    adaptive: {
+      score: 83,
+      fields: [
+        { key: "Diagnosis", val: "Active oncology patient — possible early progression (unconfirmed)", ok: true },
+        { key: "Stage", val: "Progression status: uncertain — imaging ambiguous", ok: true },
+        { key: "Treatment", val: "Current protocol maintained pending reassessment", ok: true },
+        { key: "Treatment intent", val: "Watch-and-wait — conditional escalation to 2nd-line if confirmed", ok: true },
+        { key: "Next steps", val: "Repeat imaging in 4–6 weeks; escalation contingent on findings", ok: true }
+      ]
+    },
+    insight: "This is where generic extraction fails most catastrophically — 29% accuracy because there are zero definitive statements to anchor on. The style-adapted prompt handled hedged clinical language by parsing conditional logic: 'would consider' + 'if symptoms worsen' maps to watch-and-wait intent. It also flagged the note as uncertainty-type so downstream reviewers know extracted fields are provisional — a signal the generic prompt never produces."
+  }
+];
+
+let current = 0;
+let running = false;
+
+function selectNote(idx) {
+  current = idx;
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+  const n = NOTES[idx];
+  document.getElementById('note-doctor').textContent = n.doctor;
+  document.getElementById('style-badge').textContent = n.styleBadge;
+  document.getElementById('note-text').textContent = n.text;
+  document.getElementById('results-section').classList.remove('visible');
+  resetSteps();
+  document.getElementById('run-btn').disabled = false;
+}
+
+function resetSteps() {
+  ['step1','step2','step3','step4'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.remove('done','running');
+    el.innerHTML = el.innerHTML.replace(/<div class="dot-pulse"><\/div>/g,'');
+    const labels = ['1. Classify style','2. Generic prompt','3. Style-adapted prompt','4. Compare'];
+    const idx = parseInt(id.replace('step','')) - 1;
+    el.innerHTML = `<span>${labels[idx]}</span>`;
+  });
+}
+
+function setStep(id, state) {
+  const el = document.getElementById(id);
+  el.classList.remove('done','running');
+  el.classList.add(state);
+  if (state === 'running') {
+    el.innerHTML = `<div class="dot-pulse"></div><span>${el.querySelector('span') ? el.querySelector('span').textContent : ''}</span>`;
+  }
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function runExtraction() {
+  if (running) return;
+  running = true;
+  document.getElementById('run-btn').disabled = true;
+  document.getElementById('results-section').classList.remove('visible');
+  resetSteps();
+
+  const n = NOTES[current];
+
+  setStep('step1','running');
+  await sleep(800);
+  setStep('step1','done');
+  document.getElementById('step1').innerHTML = `<span>✓ ${n.styleBadge}</span>`;
+
+  setStep('step2','running');
+  await sleep(1000);
+  setStep('step2','done');
+  document.getElementById('step2').innerHTML = `<span>✓ Generic — ${n.generic.score}%</span>`;
+
+  setStep('step3','running');
+  await sleep(1100);
+  setStep('step3','done');
+  document.getElementById('step3').innerHTML = `<span>✓ Adaptive — ${n.adaptive.score}%</span>`;
+
+  setStep('step4','running');
+  await sleep(600);
+  setStep('step4','done');
+  document.getElementById('step4').innerHTML = `<span>✓ +${n.adaptive.score - n.generic.score}pp lift</span>`;
+
+  document.getElementById('generic-bar').style.width = n.generic.score + '%';
+  document.getElementById('adaptive-bar').style.width = n.adaptive.score + '%';
+  document.getElementById('generic-score').textContent = n.generic.score + '%';
+  document.getElementById('adaptive-score').textContent = n.adaptive.score + '%';
+
+  const renderFields = (fields) => fields.map(f =>
+    `<div class="field-block">
+      <div class="field-key">${f.key}</div>
+      <div class="field-val ${f.ok ? 'found' : 'missing'}">${f.val}</div>
+    </div>`
+  ).join('');
+
+  document.getElementById('generic-fields').innerHTML = renderFields(n.generic.fields);
+  document.getElementById('adaptive-fields').innerHTML = renderFields(n.adaptive.fields);
+  document.getElementById('insight-text').textContent = n.insight;
+
+  document.getElementById('results-section').classList.add('visible');
+  running = false;
+  document.getElementById('run-btn').disabled = false;
+}
+
+selectNote(0);
+</script>
+</body>
+</html>

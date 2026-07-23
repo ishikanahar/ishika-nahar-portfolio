@@ -1,15 +1,6 @@
 /**
- * ------------------------------------------------------------------
- * PROJECTS / CASE STUDIES  —  Ishika, this is the most important file.
- * ------------------------------------------------------------------
- * Each object here becomes a project card on the home/work pages AND a
- * full case-study page at /work/<slug>.
- *
- * - Text wrapped in "[Ishika: ...]" is a placeholder to replace/verify.
- * - Keep results HONEST: only list verified outcomes.
- * - To hide a section on a case study, delete the field or leave it
- *   as an empty array/string.
- * ------------------------------------------------------------------
+ * Project index for cards + routing.
+ * Deep case-study copy lives in data/projects/* where expanded.
  */
 
 export type ProjectCategory =
@@ -19,8 +10,16 @@ export type ProjectCategory =
   | 'Healthcare'
   | 'Research'
   | 'Computer Vision'
+  | 'Product'
 
-export type ProjectContext = 'Internship' | 'Research' | 'Hackathon' | 'Analytics'
+export type ProjectContext =
+  | 'Internship'
+  | 'Research'
+  | 'Hackathon'
+  | 'Analytics'
+  | 'Independent'
+
+export type WorkGroup = 'featured' | 'ideas' | 'projects' | 'additional'
 
 export interface PipelineStep {
   label: string
@@ -35,24 +34,21 @@ export interface CaseStudyLink {
 export interface Project {
   slug: string
   title: string
-  /** One-line problem statement for cards. */
   summary: string
-  /** Short label: organization or event. */
   organization: string
   context: ProjectContext
   timeline: string
   location?: string
   categories: ProjectCategory[]
-  /** 2-3 core technologies to surface on the card. */
   coreTech: string[]
-  /** One verified result/contribution for the card. */
   headlineResult: string
-  /** Show on the home "featured" strip? */
+  /** Featured Applied AI / ML strip */
   featured: boolean
-  /** Accent color key for the card visual (chart-1..chart-5). */
+  workGroup: WorkGroup
   accent: 1 | 2 | 3 | 4 | 5
+  statusBadge?: string
+  ctaLabel?: string
 
-  // ---- Full case study fields ----
   role: string
   collaborators?: string
   links?: CaseStudyLink[]
@@ -65,350 +61,602 @@ export interface Project {
   technicalDetails: string[]
   challenges: string[]
   results: string[]
-  limitations: string[]
+  limitations: string
   learned: string
   nextSteps?: string
+  figures?: { src: string; alt: string; caption: string }[]
 }
 
 export const projects: Project[] = [
-  // ================================================================
-  // 1. LUVEO HEALTH COMPLIANCE COPILOT
-  // ================================================================
   {
-    slug: 'luveo-health-compliance-copilot',
+    slug: 'luveo-compliance-copilot',
     title: 'Luveo Health Compliance Copilot',
     summary:
-      'Extending and evaluating an AI copilot that reasons over healthcare compliance scenarios end to end.',
+      'Extending and evaluating an AI copilot that translates structured healthcare-compliance results into clear, actionable explanations.',
     organization: 'Luveo Health',
     context: 'Internship',
-    timeline: '[Ishika: e.g. Summer 2025]',
-    location: '[Ishika: Remote / City]',
+    timeline: 'June 2026 – Present',
+    location: 'San Diego, CA',
     categories: ['Applied AI', 'Healthcare'],
-    coreTech: ['FastAPI', 'React', 'Langfuse'],
+    coreTech: ['FastAPI', 'React', 'Langfuse', 'AI Evaluation'],
     headlineResult:
-      'Extended compounding support across the full stack and traced AI behavior end to end with Langfuse.',
+      'Extended compounding support across domain models, field semantics, API contracts, and tests, then traced AI behavior end to end using Langfuse.',
     featured: true,
+    workGroup: 'featured',
     accent: 1,
-
-    role: 'Applied AI / software intern — extended the copilot backend and clinical sandbox, mapped compliance scenarios, and evaluated AI behavior with tracing.',
-    links: [
-      // { label: 'Demo', href: '[Ishika: link]' },
-      // { label: 'Docs', href: '[Ishika: link]' },
-    ],
+    ctaLabel: 'Explore the Case Study',
+    role: 'Machine Learning Intern — extended the copilot backend and clinical sandbox, mapped compliance scenarios, and evaluated AI behavior with tracing.',
+    links: [],
     problem:
-      'Healthcare organizations must check clinical actions against a web of interoperability standards and compliance rules. Luveo builds an AI copilot that reasons over these scenarios, but its rule execution, explanations, and clinical sandbox needed to be extended and validated so that outputs were both correct and explainable.',
+      'Healthcare organizations must check clinical actions against interoperability standards and compliance rules. Luveo builds an AI copilot that reasons over these scenarios; rule execution, explanations, and the clinical sandbox needed extension and validation so outputs were correct and explainable.',
     whyItMatters:
-      'When AI is used near clinical and compliance decisions, an answer is not enough — teams need to see why the system reached a conclusion. Reliable tracing and complete knowledge artifacts are what separate a demo from something a compliance team could eventually trust.',
+      'Near clinical and compliance decisions, teams need to see why a system reached a conclusion. Tracing and grounded knowledge separate a demo from something a compliance team could eventually trust.',
     data: [
       'Eight compliance scenarios mapped across HL7 v2.5, FHIR R4, and Pyxis / Omnicell-style dispensing payloads.',
-      'Synthetic data only — a Phase 1 environment intended for architecture and workflow validation.',
-      'Structured AI knowledge artifacts connecting domain rules to model-consumable formats.',
+      'Synthetic data only — Phase 1 architecture and workflow validation.',
+      'Structured knowledge artifacts connecting domain rules to model-consumable formats.',
     ],
     approach:
-      'I worked from an existing copilot architecture: tracing results from rule execution through a FastAPI case view and explanation layer, connecting a React clinical sandbox to an authenticated FastAPI backend, and extending the domain model so a new class of scenario (compounding) flowed correctly from payload to explanation.',
+      'Traced results from rule execution through a FastAPI case view and explanation layer, connected a React clinical sandbox to an authenticated FastAPI backend, and extended compounding so scenarios flowed from payload to explanation.',
     pipeline: [
-      { label: 'Payload', detail: 'HL7 v2.5 / FHIR R4 / dispensing data enters the system' },
-      { label: 'Rule execution', detail: 'Compliance rules evaluate the scenario' },
-      { label: 'FastAPI case view', detail: 'Structured result + explanation layer' },
-      { label: 'React sandbox', detail: 'Authenticated clinician-facing view' },
-      { label: 'Langfuse trace', detail: 'AI behavior inspected and evaluated' },
+      { label: 'Synthetic event', detail: 'HL7 / FHIR / dispensing payload' },
+      { label: 'Rules engine', detail: 'Deterministic Pass / Warning / Fail' },
+      { label: 'FastAPI case view', detail: 'Structured result + evidence' },
+      { label: 'Explainer agent', detail: 'Grounded natural-language guidance' },
+      { label: 'Langfuse', detail: 'Trace prompts, tools, failures' },
     ],
     contribution: [
-      'Extended compounding support across field semantics, domain models, loader tests, and the OpenAPI contract.',
-      'Connected the React clinical sandbox to an authenticated FastAPI backend.',
-      'Mapped eight compliance scenarios across HL7 v2.5, FHIR R4, and Pyxis / Omnicell-style payloads.',
-      'Used Langfuse tracing to inspect and evaluate the copilot’s reasoning, identifying missing knowledge artifacts that blocked complete explanations.',
-      'Resolved type and schema failures surfaced while extending the domain model.',
+      'Mapped and extended architecture normalizing Epic, Pyxis, and Omnicell-style events against pharmacy rules.',
+      'Built end-to-end demo integration connecting React, FastAPI, HL7 v2.5, and FHIR R4 across eight medication scenarios.',
+      'Instrumented the LLM explanation layer with Langfuse tracing.',
+      'Strengthened grounding with structured workflow and regulatory schemas.',
     ],
     technicalDetails: [
-      'Backend: FastAPI with a typed domain model and an OpenAPI contract kept in sync with new fields.',
-      'Frontend: React clinical sandbox wired to authenticated backend endpoints.',
-      'Observability: Langfuse tracing to inspect prompts, outputs, and rule-execution paths.',
-      'Interoperability: HL7 v2.5, FHIR R4, and dispensing-system payload semantics.',
-      'Testing: loader tests to validate that new field semantics parsed and flowed correctly.',
+      'Backend: FastAPI with typed domain models and OpenAPI contracts.',
+      'Frontend: React clinical sandbox on authenticated endpoints.',
+      'Observability: Langfuse for prompts, tool calls, latency, failure modes.',
+      'Interoperability: HL7 v2.5, FHIR R4, dispensing-system payload semantics.',
     ],
     challenges: [
-      'Adding compounding support was not a single change — it touched field semantics, domain models, loader tests, and the API contract at once, so I had to trace type and schema failures through each layer before the scenario worked end to end.',
-      'Tracing revealed that some explanations were incomplete not because of model behavior but because knowledge artifacts were missing; diagnosing that required connecting domain research to the structured knowledge the system consumes.',
+      'Compounding support touched field semantics, domain models, loader tests, and the API contract together.',
+      'Incomplete explanations often came from missing knowledge artifacts, not only model behavior.',
     ],
     results: [
-      'Compounding scenarios flow correctly from payload through rule execution to explanation.',
-      'End-to-end AI behavior is now inspectable through Langfuse traces.',
-      'Identified and documented missing knowledge artifacts blocking complete explanations.',
-      '[Ishika: add any additional verified outcome or metric]',
+      'Eight synthetic scenarios return structured Pass, Warning, or Fail evaluations.',
+      'End-to-end AI behavior inspectable through Langfuse traces.',
     ],
     limitations:
-      'The Phase 1 environment uses synthetic data and is intended for architecture and workflow validation. This work does not represent deployment in a clinical environment, use with real patient data, validated regulatory advice, or full production readiness, and I did not own the entire product.',
+      'Phase 1 uses synthetic data for architecture validation. Not a deployed clinical product and not validated regulatory guidance.',
     learned:
-      'I learned how much of applied AI work is systems reasoning — following a result across payloads, rules, APIs, and UI — and that evaluating whether a system can explain itself matters as much as whether it produces an answer.',
-    nextSteps:
-      'Natural extensions include broadening scenario coverage, filling identified knowledge-artifact gaps, and building richer evaluation on top of the tracing layer. [Ishika: confirm/adjust.]',
+      'Applied AI work is systems reasoning — following a result across payloads, rules, APIs, and UI — and evaluating whether a system can explain itself.',
   },
 
-  // ================================================================
-  // 2. STERNSON LAB — BEHAVIORAL MACHINE LEARNING
-  // ================================================================
   {
-    slug: 'sternson-lab-behavioral-ml',
-    title: 'Computational Behavioral ML at the Sternson Lab',
+    slug: 'sternson-behavioral-ml',
+    title: 'Behavioral Machine Learning for Social Observation',
     summary:
-      'Turning noisy multi-animal pose-estimation data into a validated behavior classifier.',
+      'Built a human-in-the-loop workflow for tracking two interacting mice, extracting behavioral features, and evaluating observation-behavior predictions against corrected annotations.',
     organization: 'Sternson Lab, UC San Diego',
     context: 'Research',
-    timeline: '[Ishika: e.g. 2024–2025]',
-    location: 'La Jolla, CA',
+    timeline: 'June 2025 – Present',
+    location: 'San Diego, CA',
     categories: ['Machine Learning', 'Computer Vision', 'Research'],
-    coreTech: ['SLEAP', 'XGBoost', 'Python'],
+    coreTech: ['Computer Vision', 'SLEAP', 'XGBoost', 'Behavioral Data'],
     headlineResult:
-      'Trained a behavior classifier reaching 0.85 mean ROC-AUC with five-fold cross-validation.',
+      '8,200 annotated frames and 0.85 mean ROC-AUC with five-fold cross-validation',
     featured: true,
+    workGroup: 'featured',
     accent: 3,
-
-    role: 'Research contributor — trained pose-estimation models, engineered behavioral features, built and evaluated the classifier, and created human-in-the-loop review tooling.',
+    ctaLabel: 'Explore the Case Study',
+    role: 'Data Engineer Research Assistant — labeling, pose-model iteration, feature engineering, classification, and human-in-the-loop review tooling.',
     links: [],
     problem:
-      'Understanding social behavior in interacting mice requires tracking their movement precisely and then labeling what they are doing — but raw video produces noisy tracking with occlusions and identity switches, and manual behavioral labeling does not scale.',
+      'Manually reviewing long behavioral recordings does not scale. The lab needed structured data from two interacting mice to study social observation and learning.',
     whyItMatters:
-      'Reliable, automated behavioral analysis lets neuroscientists study social behavior at a scale and consistency that manual scoring cannot match, while keeping a human in the loop for validation.',
+      'Automated tracking plus human validation lets researchers quantify social learning at a scale manual scoring alone cannot match.',
     data: [
       '8,200 manually annotated frames across three labeling batches.',
-      'Four anatomical keypoints tracked across two interacting mice.',
-      'ELAN ground-truth behavioral annotations used to align model-derived features.',
-      '[Ishika: confirm any dataset detail before publishing; do not expose restricted lab data.]',
+      'Four anatomical keypoints across two interacting mice (DEM and OBS).',
+      'Corrected behavioral annotations aligned to engineered features.',
     ],
     approach:
-      'I trained SLEAP multi-animal pose-estimation models on annotated frames, engineered movement, distance, orientation, and temporal features from the tracked keypoints, aligned those features with ELAN ground-truth annotations, and trained an XGBoost classifier to recognize behaviors — then validated results with a human review interface.',
+      'Human-in-the-loop SLEAP pose estimation → feature engineering → XGBoost behavior classification → raster and GUI error analysis.',
     pipeline: [
-      { label: 'Video frames', detail: '8,200 annotated frames, 2 mice' },
-      { label: 'SLEAP pose model', detail: '4 keypoints per animal, identity maintained' },
-      { label: 'Feature engineering', detail: 'Movement, distance, orientation, temporal' },
-      { label: 'XGBoost classifier', detail: 'Aligned to ELAN ground truth' },
-      { label: 'Human review', detail: 'PyQt interface validates predictions' },
+      { label: 'Label keypoints', detail: 'Nose, ears, tail base' },
+      { label: 'Train pose models', detail: 'Top-down multi-animal SLEAP' },
+      { label: 'Review failures', detail: 'Occlusion, overlap, identity' },
+      { label: 'Extract features', detail: 'Movement, distance, orientation' },
+      { label: 'Classify behavior', detail: 'XGBoost + 5-fold CV' },
     ],
     contribution: [
-      'Trained SLEAP multi-animal pose-estimation models and maintained animal identities across frames.',
-      'Investigated occlusion, identity switches, and low-confidence predictions.',
-      'Engineered movement, distance, orientation, and temporal features from tracked keypoints.',
-      'Aligned model-derived features with ELAN ground-truth annotations.',
-      'Trained an XGBoost behavior classifier reaching 0.85 mean ROC-AUC with five-fold cross-validation.',
-      'Explored Hidden Markov Models for continuous behavioral-state modeling.',
-      'Created Python raster plots for error analysis and built a PyQt interface for human validation.',
+      'Annotated 8,200 frames; corrected difficult failure cases.',
+      'Engineered behavioral features and trained XGBoost (0.85 mean ROC-AUC).',
+      'Built error-analysis visualizations and PyQt review workflows.',
+      'Contributed analyses presented at SfN 2025.',
     ],
     technicalDetails: [
-      'Pose estimation: SLEAP multi-animal models with identity tracking.',
-      'Feature engineering: kinematic (movement, distance, orientation) and temporal features.',
-      'Model: XGBoost classifier evaluated with five-fold cross-validation (0.85 mean ROC-AUC).',
-      'Exploration: Hidden Markov Models for continuous behavioral-state modeling.',
-      'Tooling: Python raster plots for error analysis; PyQt review interface for human-in-the-loop validation.',
+      'SLEAP multi-animal top-down pose estimation.',
+      'XGBoost on engineered trajectory features.',
+      'Five-fold cross-validation; HMM exploration for temporal structure.',
     ],
     challenges: [
-      'Occlusions and identity switches produced low-confidence predictions; I analyzed where and why they occurred (using raster plots) instead of treating tracking output as ground truth.',
-      'Model-derived features had to be carefully aligned with ELAN annotations so the classifier learned from correctly timed labels.',
+      'Occlusion and identity switches corrupt downstream features.',
+      'Aggregate ROC-AUC hides fragmented bouts — raster review was essential.',
     ],
     results: [
-      'XGBoost classifier reached 0.85 mean ROC-AUC with five-fold cross-validation.',
-      'Built a reusable feature pipeline and a human-in-the-loop PyQt review interface.',
-      '[Ishika: add SfN 2025 poster/presentation once final materials confirm it.]',
+      '0.85 mean ROC-AUC with five-fold cross-validation.',
+      'Reusable feature pipeline and human-in-the-loop review tools.',
     ],
     limitations:
-      'This is experimental research on a specific dataset. Tracking quality is affected by occlusion and identity switches, and results reflect the annotated data and scope of the study rather than a general-purpose behavior model.',
+      'Experimental research on a specific dataset. Public demo uses a short precomputed sample; lab footage pending approval.',
     learned:
-      'I learned to treat model outputs skeptically — analyzing errors, aligning noisy signals with ground truth, and keeping a human in the loop rather than trusting a single accuracy number.',
-    nextSteps:
-      'Continued directions include richer behavioral-state modeling (e.g. HMMs) and expanding validated behavior classes. [Ishika: confirm/adjust.]',
+      'A strong aggregate metric does not reveal where a system fails — frame-level review and domain context remain essential.',
   },
 
-  // ================================================================
-  // 3. OWKIN HACKATHON — BIOMEDICAL FOUNDATION MODELS
-  // ================================================================
   {
-    slug: 'owkin-biomedical-foundation-models',
-    title: 'Biomedical Foundation Model Evaluation — Owkin Hackathon',
+    slug: 'owkin-foundation-model-evaluation',
+    title: 'Biomedical Foundation Model Evaluation at the Owkin Hackathon',
     summary:
-      'Testing whether pathology foundation-model predictions rely on meaningful tissue representations.',
-    organization: 'Owkin Hackathon',
+      'Testing whether pathology foundation-model predictions depend on meaningful tissue representations rather than spurious signals.',
+    organization: 'Owkin Hackathon (K-Scope)',
     context: 'Hackathon',
-    timeline: '[Ishika: e.g. 2025]',
-    location: '[Ishika: City / Remote]',
+    timeline: 'July 2026',
+    location: 'San Francisco, CA',
     categories: ['Applied AI', 'Research', 'Healthcare'],
-    coreTech: ['Phikon-v2', 'H0-mini', 'Python'],
+    coreTech: ['Phikon-v2', 'H-optimus-0', 'Probes', 'Matched-random controls'],
     headlineResult:
-      'Designed causal probes and shipped a certify(prediction) evidence-card workflow with the team.',
+      '1st Place. certify(prediction) evidence cards across pathology foundation-model embeddings.',
     featured: true,
+    workGroup: 'featured',
     accent: 2,
-
-    role: '[Ishika: your exact role, e.g. "Evaluation & interface" — name teammates below.]',
-    collaborators: '[Ishika: name collaborators, e.g. "with [names]"]',
-    links: [],
+    ctaLabel: 'Explore the Case Study',
+    role: 'Hackathon teammate: evidence-card dashboard UI and evaluation-workflow framing with Ben Moskowitz, Sophia Zhou, and Eddie Bae.',
+    collaborators: 'Ben Moskowitz, Sophia Zhou, Eddie Bae',
+    links: [
+      { label: 'GitHub (K-Scope)', href: 'https://github.com/ishikanahar/K-scope' },
+    ],
     problem:
-      'Biomedical foundation models produce strong predictions, but it is not obvious whether those predictions depend on meaningful tissue representations or on spurious signal. Our team asked how to evaluate that question rather than trusting the score.',
+      'Biomedical foundation models produce strong predictions, but it is unclear whether those predictions depend on meaningful tissue representations or spurious signal.',
     whyItMatters:
-      'In biomedical settings, a prediction that is right for the wrong reason is dangerous. Evaluating whether a model relies on meaningful representations is central to trusting AI in high-stakes domains.',
+      'In biomedical settings, a prediction that is right for the wrong reason is dangerous. Evaluating representation reliance is central to trusting AI in high-stakes domains.',
     data: [
-      'Embeddings from biomedical pathology foundation models such as Phikon-v2 and H0-mini.',
-      'Representations explored at multiple model depths.',
+      'Embeddings from pathology foundation models (Phikon-v2, H-optimus-0).',
+      '5,400 pathology image tiles across 9 tissue classes (NCT-CRC-HE).',
     ],
     approach:
-      'We designed a battery of evaluations — causal probes, ablations, specificity tests, and matched-random comparisons — to test whether predictions depended on meaningful representations, then packaged the evidence into a structured card through a certify(prediction) workflow.',
+      'Concept probes, latent-space interventions, and matched-random controls measuring necessity, sufficiency, and specificity — packaged as evidence cards via certify(prediction).',
     pipeline: [
-      { label: 'Model embeddings', detail: 'Phikon-v2 / H0-mini at multiple depths' },
-      { label: 'Causal probes', detail: 'Ablations, specificity, matched-random tests' },
-      { label: 'Evidence synthesis', detail: 'Results aggregated per prediction' },
-      { label: 'certify(prediction)', detail: 'Structured evidence card produced' },
+      { label: 'Histology tile', detail: 'H&E region' },
+      { label: 'Foundation model', detail: 'Frozen embeddings' },
+      { label: 'Probes & interventions', detail: 'Necessity / specificity' },
+      { label: 'Matched-random null', detail: 'Control comparisons' },
+      { label: 'Evidence card', detail: 'certify(prediction)' },
     ],
     contribution: [
-      'Contributed to designing causal probes, ablations, specificity tests, and matched-random comparisons.',
-      'Helped produce a structured evidence card through a certify(prediction) workflow.',
-      'Built or contributed to the demonstration interface.',
-      'Communicated limitations in model-internal causal interpretation.',
-      '[Ishika: sharpen these to what YOU specifically did vs. the team.]',
+      'Built the local evidence-card dashboard UI so the team could demo certify(prediction) without a live GPU.',
+      'Hardened the UI for the zero-claims edge case.',
+      'Collaborated on framing certification as a structured evaluation workflow.',
     ],
     technicalDetails: [
-      'Foundation models: Phikon-v2 and H0-mini pathology embeddings.',
-      'Evaluation design: causal probes, ablations, specificity tests, matched-random baselines.',
-      'Representation analysis across multiple model depths.',
-      'Output: a certify(prediction) workflow producing a structured evidence card.',
+      'Frozen vision foundation models; no fine-tuning of the backbone.',
+      'Matched-random controls for interventions.',
+      'Structured evidence cards rather than accuracy-only reporting.',
     ],
     challenges: [
-      'Distinguishing meaningful representation from coincidental signal required careful experiment design — a single probe is not convincing, so we combined multiple complementary tests.',
-      'Communicating that model-internal probes do not prove real-world biological causality, without undercutting the value of the evaluation.',
+      'Model-internal causality ≠ biological causality.',
+      'Hackathon time constraints limit multi-site confound testing.',
     ],
     results: [
-      'Delivered a working certify(prediction) evidence-card workflow within the hackathon.',
-      'Produced a structured, communicable evaluation of representation reliance.',
-      '[Ishika: add placement / recognition / demo link if applicable.]',
+      '1st Place, Owkin Rewiring Biology Hackathon.',
+      'Reusable evaluation pipeline and evidence-card workflow.',
     ],
     limitations:
-      'This was a time-boxed, team-based hackathon project. Model-internal interventions do not constitute proof of real-world biological causality — they probe what the model relies on, not what is biologically true.',
+      'Time-boxed team hackathon. Model-internal interventions do not prove real-world biological causality.',
     learned:
-      'I learned how to design evaluation as a first-class deliverable and to communicate carefully scoped claims about what a model does and does not tell us.',
-    nextSteps:
-      'The evaluation battery could be extended to more models and formalized into a reusable evidence framework. [Ishika: confirm/adjust.]',
+      'Evaluation can be a first-class deliverable — and claims about what a model relies on must stay carefully scoped.',
   },
 
-  // ================================================================
-  // 4. SKILLSOFT — CONVERSATION & PRODUCT ANALYTICS
-  // ================================================================
   {
-    slug: 'skillsoft-analytics',
-    title: 'Skillsoft Conversation & Product Analytics',
+    slug: 'momentum',
+    title: 'MOMentum',
     summary:
-      'Turning beta conversation logs and learner data into prompt and product recommendations.',
+      'Context-aware personal AI prototype combining RAG with structured user state (tasks, location, focus, device signals) for proactive nudges and chat.',
+    organization: 'Independent · UC San Diego × Y Combinator Hackathon',
+    context: 'Independent',
+    timeline: '2025 – Present',
+    categories: ['Applied AI', 'Product'],
+    coreTech: ['FastAPI', 'Claude API', 'sentence-transformers', 'FAISS'],
+    headlineResult:
+      'Interactive frontend live; FastAPI + RAG + Claude MVP implemented locally.',
+    featured: false,
+    workGroup: 'ideas',
+    accent: 4,
+    statusBadge: 'Idea',
+    ctaLabel: 'Explore the Case Study',
+    role: 'Independent builder: product vision, interactive frontend, FastAPI/RAG backend, and Claude integration.',
+    links: [
+      {
+        label: 'Interactive UI',
+        href: 'https://ishikanahar.github.io/momentum/frontend/',
+      },
+      {
+        label: 'GitHub',
+        href: 'https://github.com/ishikanahar/momentum',
+      },
+    ],
+    problem:
+      'Students juggle deadlines, location changes, energy, and distractions. Existing tools wait for a prompt instead of combining fragmented context into timely guidance.',
+    whyItMatters:
+      'Proactive, context-aware assistance can turn fragmented signals into timely decisions — if the system stays honest about what is prototype vs production.',
+    data: [
+      'Structured user-state fields (tasks, location, battery, focus, sleep, screen time).',
+      'Demo knowledge base embedded with sentence-transformers into an in-memory FAISS index.',
+    ],
+    approach:
+      'Mobile-first UI + FastAPI /chat (RAG + Claude) and /nudge endpoints, with simulated context until live integrations exist.',
+    pipeline: [
+      { label: 'User / device state', detail: 'Structured fields (often simulated)' },
+      { label: 'Query or nudge', detail: '/chat · /nudge' },
+      { label: 'FAISS retrieval', detail: 'Top-k personal chunks' },
+      { label: 'Prompt assembly', detail: 'Role + state + memory' },
+      { label: 'Claude', detail: 'Personalized reply / nudge' },
+    ],
+    contribution: [
+      'Designed and built the interactive mobile frontend.',
+      'Implemented FastAPI backend with /chat (RAG) and /nudge.',
+      'Wired sentence-transformers + FAISS + Claude for grounded responses.',
+    ],
+    technicalDetails: [
+      'Frontend: vanilla HTML/CSS/JS phone UI on GitHub Pages.',
+      'Backend: FastAPI, sentence-transformers (all-MiniLM-L6-v2), FAISS, Claude API.',
+      'Public Pages demo falls back to offline replies until a hosted backend URL is set.',
+    ],
+    challenges: [
+      'Separating a compelling product experience from unfinished live integrations.',
+      'Designing when not to interrupt — not only how to generate text.',
+    ],
+    results: [
+      'Shipped interactive UI prototype.',
+      'Local FastAPI + RAG + Claude MVP in repository.',
+    ],
+    limitations:
+      'Not a production personal OS. Live calendar/wearable integrations and systematic evaluation are incomplete.',
+    learned:
+      'A useful personal AI needs structured state, retrieval, and a policy for silence — not only a chat box.',
+    nextSteps:
+      'Host the backend, wire one real context source end-to-end, and evaluate retrieval + nudge timing.',
+  },
+
+  {
+    slug: 'health-text-robustness',
+    title: 'Robustness of Health Text Classification',
+    summary:
+      'Comparing TF-IDF, LSTM, and DistilBERT on symptom-to-diagnosis classification under synonym, typo, and word-deletion perturbations.',
+    organization: 'Independent · UC San Diego coursework / research project',
+    context: 'Independent',
+    timeline: '2025',
+    categories: ['Machine Learning', 'Data Science', 'Healthcare'],
+    coreTech: ['DistilBERT', 'LSTM', 'TF-IDF', 'Perturbation evaluation'],
+    headlineResult:
+      'Transformer led on clean Macro F1 (0.86); TF-IDF stayed surprisingly robust under typos until stress intensity rose.',
+    featured: false,
+    workGroup: 'projects',
+    accent: 5,
+    ctaLabel: 'View on GitHub',
+    role: 'Built the full comparison pipeline: models, perturbation engine, metrics, and stress tests.',
+    links: [
+      {
+        label: 'GitHub',
+        href: 'https://github.com/ishikanahar/health-text-robustness',
+      },
+    ],
+    problem:
+      'Clinical NLP demos often look strong on clean symptom text. Real users type typos, synonyms, and incomplete phrases — and models can collapse without anyone noticing until deployment.',
+    whyItMatters:
+      'Health text systems have to stay useful under messy language. Comparing clean accuracy alone hides brittleness that matters for triage-style or decision-support tooling.',
+    data: [
+      'gretelai/symptom_to_diagnosis — natural-language symptom descriptions mapped to diagnosis labels.',
+      'Restricted to the top-10 diagnosis classes so classical, recurrent, and Transformer baselines compete on the same label set.',
+      'Held-out evaluation under clean text plus controlled synonym, character-typo, and word-drop perturbations.',
+    ],
+    approach:
+      'Train TF-IDF + logistic regression, a bidirectional LSTM, and fine-tuned DistilBERT on the same splits. Score Accuracy and Macro F1 on clean text, then re-evaluate under synonym swaps, typos, and dropped words. Add a typo-intensity stress curve to see when each model breaks.',
+    pipeline: [
+      { label: 'Symptom text', detail: 'Natural-language descriptions' },
+      { label: 'Perturb', detail: 'Synonym / typo / drop' },
+      { label: 'Classify', detail: 'TF-IDF · LSTM · DistilBERT' },
+      { label: 'Compare', detail: 'Accuracy · Macro F1 · stress curve' },
+    ],
+    contribution: [
+      'Designed the clean-vs-perturbed protocol so every model sees identical splits and noise settings.',
+      'Implemented classical (TF-IDF + LR), recurrent (LSTM), and Transformer (DistilBERT) baselines end to end.',
+      'Built a typo intensity sweep that plots degradation as character noise rises — not only a single “typo” flag.',
+      'Reported Macro F1 alongside accuracy so majority-class wins cannot hide weak rare diagnoses.',
+    ],
+    technicalDetails: [
+      'Multi-class diagnosis classification on top-10 labels for fair head-to-head comparison.',
+      'Perturbations applied at evaluation time: synonym substitution, character-level typos, and random word deletion.',
+      'DistilBERT fine-tuned as a sequence classifier; TF-IDF uses sparse bag-of-words features with logistic regression.',
+      'Stress curve varies typo rate so robustness is a curve, not a single point estimate.',
+    ],
+    challenges: [
+      'LSTM underperformed with limited labeled data — sequence capacity without enough examples.',
+      'Transformers led on clean text but degraded sharply under heavy character noise.',
+      'Synonym perturbations can be semantically valid yet still shift lexical features classical models rely on.',
+    ],
+    results: [
+      'Clean: DistilBERT Macro F1 ≈ 0.86; TF-IDF accuracy ≈ 0.97 on the restricted label set.',
+      'Typos: TF-IDF accuracy drops from ~0.97 → ~0.79; DistilBERT Macro F1 falls from ~0.86 → ~0.44 under the same noise.',
+      'Stress curve: classical lexical features stay surprisingly stable at mild typo rates; Transformer gains erode once character noise intensifies.',
+      'Takeaway: the best clean model is not automatically the most reliable under realistic input noise.',
+    ],
+    limitations:
+      'Academic comparison on a public synthetic-style dataset — not a deployed clinical NLP system, and not a claim about real patient outcomes.',
+    learned:
+      'Robustness evaluation belongs next to accuracy. Clean leaderboards can hide failure modes that show up the moment users type imperfectly.',
+    figures: [
+      {
+        src: '/projects/health-text/performance_comparison.png',
+        alt: 'Performance comparison across TF-IDF, LSTM, and DistilBERT',
+        caption: 'Clean vs perturbed performance across model families.',
+      },
+      {
+        src: '/projects/health-text/f1_across_perturbations.png',
+        alt: 'Macro F1 across synonym, typo, and drop perturbations',
+        caption: 'Macro F1 under synonym, typo, and word-drop noise.',
+      },
+      {
+        src: '/projects/health-text/accuracy_across_perturbations.png',
+        alt: 'Accuracy across perturbation types',
+        caption: 'Accuracy under the same perturbation suite.',
+      },
+    ],
+  },
+
+  {
+    slug: 'neural-decoder-steinmetz',
+    title: 'Neural Decoder for Behavioral Choice',
+    summary:
+      'Decoding left vs. right choices from Neuropixels population activity (Steinmetz 2019) with PCA, logistic regression, and permutation testing.',
+    organization: 'Independent · Steinmetz / DANDI 000017',
+    context: 'Independent',
+    timeline: '2025',
+    categories: ['Machine Learning', 'Research'],
+    coreTech: ['PCA', 'Logistic Regression', 'Permutation testing', 'Neuropixels'],
+    headlineResult:
+      'ROC-AUC 0.884 ± 0.025 (5-fold CV); permutation p < 0.0001 vs null AUC ≈ 0.50.',
+    featured: false,
+    workGroup: 'projects',
+    accent: 2,
+    ctaLabel: 'View on GitHub',
+    role: 'End-to-end analysis: firing-rate features, PCA, decoder, null tests, and figures.',
+    links: [
+      {
+        label: 'GitHub',
+        href: 'https://github.com/ishikanahar/neural-decoder-steinmetz',
+      },
+    ],
+    problem:
+      'Neuropixels recordings give hundreds of simultaneously recorded neurons — noisy, correlated, and high-dimensional. The question: can left vs right choice still be decoded above chance from a short post-stimulus window, without pretending the decoder is a causal circuit map?',
+    whyItMatters:
+      'Shows whether behaviorally relevant structure lives in a low-dimensional neural subspace. Cross-validation alone is not enough; a permutation null asks whether the effect beats chance label structure.',
+    data: [
+      'Steinmetz et al. 2019 — Mouse Richards session from DANDI 000017.',
+      '778 neurons × trial firing rates in a 0–300 ms post-stimulus window.',
+      '174 left/right choice trials after filtering for analyzable behavioral outcomes.',
+    ],
+    approach:
+      'Build a trial × neuron firing-rate matrix → PCA to compress correlated population activity → L2-regularized logistic regression on the top principal components → 5-fold cross-validated ROC-AUC, plus a 500-shuffle label-permutation null to estimate chance.',
+    pipeline: [
+      { label: 'Firing rates', detail: '174 trials × 778 neurons' },
+      { label: 'PCA', detail: 'Low-dimensional neural modes' },
+      { label: 'Decode', detail: 'L2 logistic regression' },
+      { label: 'Validate', detail: 'CV + 500× permutation null' },
+    ],
+    contribution: [
+      'Implemented the full decoding pipeline from firing-rate features through figures.',
+      'Chose PCA + L2 logistic regression to control overfitting with 778 features and only 174 trials.',
+      'Ran a 500-iteration label permutation test so “above chance” is quantified, not assumed.',
+      'Swept principal-component count and showed performance saturates around ~11 PCs.',
+    ],
+    technicalDetails: [
+      'Primary metric: ROC-AUC for ranking left vs right trials (reported with fold mean ± std).',
+      'Secondary metric: classification accuracy under the same CV splits.',
+      'Null distribution mean AUC ≈ 0.505 — confirms the chance baseline sits at ~0.50.',
+      'Regularization and dimensionality reduction are required; raw-rate decoding overfits in this regime.',
+    ],
+    challenges: [
+      'p ≫ n features vs trials — without PCA, the classifier memorizes noise.',
+      'Population correlations mean many neurons carry overlapping information; the useful subspace is smaller than 778.',
+      'Decoding choice is not the same as identifying a specific causal circuit.',
+    ],
+    results: [
+      'ROC-AUC 0.884 ± 0.025; accuracy 0.799 ± 0.039 under 5-fold CV.',
+      'Permutation p-value < 0.0001 versus the label-shuffled null (mean null AUC ≈ 0.505).',
+      'Decoder performance saturates near ~11 principal components — most usable signal lives in a compact subspace.',
+    ],
+    limitations:
+      'Single subject / session analysis. Decoding behavioral choice is not a claim about a specific causal circuit or generalizes across mice without further sessions.',
+    learned:
+      'Cross-validation measures stability; permutation testing asks whether the effect beats chance. Both belong in a decoding write-up.',
+    figures: [
+      {
+        src: '/projects/neural-decoder/decoder_results.png',
+        alt: 'Neural decoder ROC and permutation-null results',
+        caption: 'Decoder ROC-AUC vs chance from the label-permutation null.',
+      },
+    ],
+  },
+
+  {
+    slug: 'adwave-aaf',
+    title: 'Adwave — AAF District 15 Competition',
+    summary:
+      'Collaborative advertising campaign work for the American Advertising Federation District 15 competition — strategy, creative planning, and team delivery.',
+    organization: 'AAF District 15 · Adwave',
+    context: 'Independent',
+    timeline: '2024 – 2025',
+    categories: ['Product'],
+    coreTech: ['Strategy', 'Team collaboration', 'Presentation'],
+    headlineResult:
+      'Team campaign delivered for AAF District 15; plansbook and competition materials produced.',
+    featured: false,
+    workGroup: 'additional',
+    accent: 1,
+    statusBadge: 'Team',
+    ctaLabel: 'View plansbook',
+    role: 'Team contributor on campaign planning and collaborative delivery.',
+    links: [
+      {
+        label: 'Plansbook (PDF)',
+        href: '/projects/adwave/plansbook.pdf',
+      },
+    ],
+    problem:
+      'Competition brief required a full campaign strategy and creative plan under tight team deadlines.',
+    whyItMatters:
+      'Shows cross-functional communication and high-stakes team delivery alongside technical work.',
+    data: ['Competition brief and secondary research for the campaign category.'],
+    approach:
+      'Collaborative strategy → creative direction → plansbook → live presentation with the Adwave team.',
+    pipeline: [
+      { label: 'Brief', detail: 'AAF District 15' },
+      { label: 'Strategy', detail: 'Audience + positioning' },
+      { label: 'Creative', detail: 'Campaign system' },
+      { label: 'Deliver', detail: 'Plansbook + pitch' },
+    ],
+    contribution: [
+      'Contributed to campaign planning and team materials.',
+      'Helped prepare competition deliverables including the plansbook.',
+    ],
+    technicalDetails: [
+      'Team project, not an ML system. Included for leadership and communication breadth.',
+    ],
+    challenges: [
+      'Aligning creative, strategy, and presentation under competition time pressure.',
+    ],
+    results: [
+      'Completed team plansbook and competition presentation materials.',
+    ],
+    limitations:
+      'Advertising competition project. Complementary to the applied AI / ML case studies.',
+    learned:
+      'Clear storytelling and team coordination transfer directly into technical demos and interviews.',
+  },
+
+  {
+    slug: 'style-adaptive-extraction',
+    title: 'Style-Adaptive Representation Extraction',
+    summary:
+      'Interactive exploration of how pathology-style features and adaptive extraction choices change what a model can surface from tissue tiles.',
+    organization: 'Independent exploration',
+    context: 'Independent',
+    timeline: '2026',
+    categories: ['Applied AI', 'Research', 'Healthcare'],
+    coreTech: ['Embeddings', 'Interactive viz', 'Pathology AI'],
+    headlineResult:
+      'Browser demo for comparing adaptive extraction paths and readout quality.',
+    featured: false,
+    workGroup: 'ideas',
+    accent: 3,
+    statusBadge: 'Idea',
+    ctaLabel: 'Open interactive demo',
+    role: 'Designed an interactive HTML exploration of adaptive extraction ideas.',
+    links: [
+      {
+        label: 'Interactive demo',
+        href: '/projects/style-adaptive/index.html',
+      },
+    ],
+    problem:
+      'Static embedding pipelines hide how extraction choices affect what becomes visible in tissue representations.',
+    whyItMatters:
+      'Before committing to a full evaluation stack, it helps to probe how style and extraction settings change the story.',
+    data: ['Illustrative pathology-style tile / embedding views for exploration.'],
+    approach:
+      'Interactive controls and visual comparisons for adaptive extraction concepts, kept clearly exploratory.',
+    pipeline: [
+      { label: 'Tile / style view', detail: 'Local tissue context' },
+      { label: 'Extraction choice', detail: 'Adaptive vs fixed path' },
+      { label: 'Readout', detail: 'What becomes decodable' },
+      { label: 'Compare', detail: 'Interactive inspection' },
+    ],
+    contribution: [
+      'Built the interactive exploration surface for style-adaptive extraction ideas.',
+    ],
+    technicalDetails: [
+      'Client-side HTML/JS demo. Not a trained production model.',
+    ],
+    challenges: [
+      'Keeping exploratory UI honest about what is simulated vs measured.',
+    ],
+    results: [
+      'Shipped a clickable demo for walking through adaptive extraction concepts.',
+    ],
+    limitations:
+      'Exploratory idea demo, not a completed research study or clinical tool.',
+    learned:
+      'Good interaction design makes representation choices inspectable before they harden into a pipeline.',
+  },
+
+  {
+    slug: 'skillsoft-product-analytics',
+    title: 'Turning Conversation Data Into Product Recommendations',
+    summary:
+      'Analyzing CAISY beta interactions and learner cohorts to understand user behavior, recurring queries, and opportunities for better prompting and audience targeting.',
     organization: 'Skillsoft Corporation',
-    context: 'Internship',
-    timeline: '[Ishika: e.g. Summer 2024]',
-    location: '[Ishika: Remote / City]',
+    context: 'Analytics',
+    timeline: 'July 2024 – September 2024',
+    location: 'Remote',
     categories: ['Data Science'],
-    coreTech: ['Tableau', 'Power BI', 'Excel'],
+    coreTech: ['Tableau', 'Power BI', 'Excel', 'Conversation Analytics'],
     headlineResult:
       'Translated CAISY beta conversation analysis into prompt and audience-targeting recommendations.',
     featured: false,
-    accent: 4,
-
-    role: 'Data / analytics intern — analyzed conversation logs and learner cohorts and turned findings into product recommendations.',
+    workGroup: 'additional',
+    accent: 5,
+    ctaLabel: 'Explore the Case Study',
+    role: 'Product & Content Strategy Intern — conversation analytics and content strategy.',
     links: [],
     problem:
-      'Skillsoft’s CAISY beta produced conversation logs and learner-engagement data, but the team needed to understand how learners actually used the product and what that implied for prompts and targeting.',
+      'CAISY beta produced conversation logs and learner-engagement data; the team needed to understand real usage and implications for prompts and targeting.',
     whyItMatters:
-      'Product decisions improve when they are grounded in real user behavior. Translating messy logs into clear recommendations is where data analysis creates product value.',
+      'Product decisions improve when grounded in real user behavior.',
     data: [
       'CAISY beta conversation logs.',
       'Learner cohort and engagement data.',
-      'Percipio metadata and technical learning paths curated in Excel.',
+      'Percipio metadata and technical learning paths.',
     ],
     approach:
-      'I analyzed conversation logs and learner cohorts, identified recurring queries and behavioral differences, and translated the findings into concrete prompt and audience-targeting recommendations — using Tableau and Power BI for analysis and visualization.',
+      'Analyzed logs and cohorts in Tableau and Power BI; translated patterns into prompt and audience-targeting recommendations; curated Percipio metadata.',
     pipeline: [
-      { label: 'Conversation logs', detail: 'CAISY beta data + learner cohorts' },
-      { label: 'Analysis', detail: 'Recurring queries, engagement patterns' },
-      { label: 'Visualization', detail: 'Tableau / Power BI dashboards' },
-      { label: 'Recommendations', detail: 'Prompt + audience-targeting guidance' },
+      { label: 'Conversation logs', detail: 'CAISY beta + cohorts' },
+      { label: 'Analysis', detail: 'Recurring queries, engagement' },
+      { label: 'Visualization', detail: 'Tableau / Power BI' },
+      { label: 'Recommendations', detail: 'Prompt + targeting guidance' },
     ],
     contribution: [
-      'Analyzed CAISY beta conversation logs and studied learner cohorts and engagement patterns.',
-      'Identified recurring queries and differences in user behavior.',
+      'Analyzed beta conversation logs and learner cohorts.',
+      'Visualized engagement patterns and recurring queries.',
       'Translated findings into prompt and audience-targeting recommendations.',
-      'Curated Percipio metadata and technical learning paths in Excel.',
-      'Created a Systems Engineering benchmark planbook for Instructional Design.',
+      'Curated Percipio metadata and technical learning paths.',
+      'Developed a Systems Engineering benchmark planbook for Instructional Design.',
     ],
     technicalDetails: [
-      'Analysis & visualization: Tableau, Power BI, Excel.',
-      'Cohort and user-behavior analysis on conversation logs.',
-      'Metadata curation for Percipio technical learning paths.',
+      'Tableau, Power BI, Excel for analysis and metadata curation.',
+      'Cohort comparison across role-play scenario responses.',
     ],
     challenges: [
-      'Conversation logs are unstructured; finding recurring, actionable patterns required judgment about what mattered to the product, not just what was frequent.',
-      '[Ishika: add a specific decision you made here if you have one.]',
+      'Conversation logs are unstructured; judgment is required to find product-relevant patterns.',
     ],
     results: [
-      'Delivered prompt and audience-targeting recommendations grounded in beta usage.',
-      'Produced a Systems Engineering benchmark planbook for Instructional Design.',
-      '[Ishika: add any adoption / impact detail if shareable.]',
+      'Delivered prompt and audience-targeting recommendations.',
+      'Produced Systems Engineering benchmark planbook for Instructional Design.',
     ],
     limitations:
-      'Findings reflect the CAISY beta period and available data. Recommendations were analytical inputs to product decisions rather than measured production outcomes.',
+      'Findings reflect the CAISY beta period. Analytical inputs to product decisions rather than measured production outcomes claimed here.',
     learned:
-      'I learned to work outside academic research — connecting data analysis to product thinking and communicating recommendations an audience could act on.',
-  },
-
-  // ================================================================
-  // 5. ALL OF US — WEARABLE DATA RESEARCH  (currently exploring)
-  // ================================================================
-  {
-    slug: 'all-of-us-wearable-research',
-    title: 'All of Us Wearable Data Research',
-    summary:
-      'Designing a reproducible cohort-analysis plan to identify night-shift workers from wearable data.',
-    organization: 'All of Us Research Program',
-    context: 'Research',
-    timeline: '[Ishika: e.g. In progress, 2025]',
-    location: '[Ishika: Remote]',
-    categories: ['Data Science', 'Healthcare', 'Research'],
-    coreTech: ['Python', 'Fitbit data', 'Cohort analysis'],
-    headlineResult:
-      'Developed a reproducible cohort-analysis plan for identifying night-shift workers. (In progress.)',
-    featured: false,
-    accent: 5,
-
-    role: 'Research contributor — designing cohort criteria and a reproducible analysis plan over wearable time-series data.',
-    links: [],
-    problem:
-      'Identifying likely night-shift workers from wearable data is ambiguous: it requires defining wear-time, qualifying nights, and activity thresholds carefully before any health question can be asked.',
-    whyItMatters:
-      'Shift work is linked to health outcomes, so reliably identifying shift workers from passive wearable data could support large-scale health research — but only if the cohort definition is sound.',
-    data: [
-      'Intraday Fitbit steps, heart-rate, activity, sleep, and device tables.',
-      'Activity between midnight and 6 a.m. used as a night-shift signal.',
-    ],
-    approach:
-      'I am defining participant wear-time and qualifying-night criteria, then developing a reproducible cohort-analysis plan that handles ambiguity in thresholds and data definitions before drawing any conclusions.',
-    pipeline: [
-      { label: 'Wearable tables', detail: 'Steps, HR, activity, sleep, device' },
-      { label: 'Wear-time rules', detail: 'Define valid days & qualifying nights' },
-      { label: 'Night-shift signal', detail: 'Activity between 12 a.m.–6 a.m.' },
-      { label: 'Cohort plan', detail: 'Reproducible, threshold-documented' },
-    ],
-    contribution: [
-      'Identifying night-shift workers using wearable activity between midnight and 6 a.m.',
-      'Defining participant wear-time and qualifying-night criteria.',
-      'Developing a reproducible cohort-analysis plan.',
-      'Handling ambiguity in thresholds and data definitions.',
-    ],
-    technicalDetails: [
-      'Data: intraday Fitbit steps, heart-rate, activity, sleep, and device tables.',
-      'Method: rule-based cohort definition with documented, reproducible thresholds.',
-      'Focus: wear-time validity and qualifying-night criteria.',
-    ],
-    challenges: [
-      'Thresholds and definitions are genuinely ambiguous; the work is as much about making defensible, documented choices as about computation.',
-    ],
-    results: [
-      'Reproducible cohort-analysis plan under development. Analysis in progress — no health-outcome findings claimed yet.',
-    ],
-    limitations:
-      'This analysis is still in progress. No completed health-outcome findings are claimed. Thresholds and cohort definitions are working choices, not validated standards.',
-    learned:
-      'I am learning how much rigor precedes results — defining a cohort well is a research contribution in itself.',
+      'Connecting data analysis to product thinking — recommendations an audience can act on.',
   },
 ]
 
@@ -418,6 +666,17 @@ export function getProject(slug: string): Project | undefined {
 
 export const featuredProjects = projects.filter((p) => p.featured)
 
+export const ideaProjects = projects.filter((p) => p.workGroup === 'ideas')
+
+export const personalProjects = projects.filter((p) => p.workGroup === 'projects')
+
+export const additionalProjects = projects.filter(
+  (p) => p.workGroup === 'additional',
+)
+
+/** @deprecated use ideaProjects */
+export const independentProjects = ideaProjects
+
 export const allCategories: ProjectCategory[] = [
   'Applied AI',
   'Machine Learning',
@@ -425,4 +684,5 @@ export const allCategories: ProjectCategory[] = [
   'Healthcare',
   'Research',
   'Computer Vision',
+  'Product',
 ]

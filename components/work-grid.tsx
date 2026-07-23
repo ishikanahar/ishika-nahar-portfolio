@@ -1,54 +1,57 @@
-'use client'
-
-import { useState } from 'react'
-import { projects, allCategories, type ProjectCategory } from '@/content/projects'
+import { personalProjects, additionalProjects } from '@/content/projects'
 import { ProjectCard } from '@/components/project-card'
-import { cn } from '@/lib/utils'
-
-type Filter = ProjectCategory | 'All'
+import { WorkFeaturedInteractive } from '@/components/work-featured-interactive'
+import {
+  MomentumIdeaCard,
+  StyleAdaptiveIdeaCard,
+} from '@/components/featured-work'
 
 export function WorkGrid() {
-  const [filter, setFilter] = useState<Filter>('All')
-
-  const filtered =
-    filter === 'All'
-      ? projects
-      : projects.filter((p) => p.categories.includes(filter))
-
-  const filters: Filter[] = ['All', ...allCategories]
-
   return (
-    <div>
-      <div className="flex flex-wrap gap-2" role="tablist" aria-label="Filter projects">
-        {filters.map((f) => (
-          <button
-            key={f}
-            type="button"
-            role="tab"
-            aria-selected={filter === f}
-            onClick={() => setFilter(f)}
-            className={cn(
-              'rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors',
-              filter === f
-                ? 'border-primary bg-primary text-primary-foreground'
-                : 'border-border bg-card text-muted-foreground hover:text-foreground',
-            )}
-          >
-            {f}
-          </button>
-        ))}
-      </div>
+    <div className="space-y-14">
+      <WorkFeaturedInteractive />
 
-      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((project) => (
-          <ProjectCard key={project.slug} project={project} />
-        ))}
-      </div>
-
-      {filtered.length === 0 && (
-        <p className="mt-10 text-center text-sm text-muted-foreground">
-          No projects in this category yet.
+      <div>
+        <h2 className="font-display text-xl font-semibold tracking-tight">
+          Projects
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          End-to-end analyses with results you can inspect.
         </p>
+        <div className="mt-6 grid gap-6 sm:grid-cols-2">
+          {personalProjects.map((project) => (
+            <ProjectCard key={project.slug} project={project} />
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h2 className="font-display text-xl font-semibold tracking-tight">
+          Ideas worth exploring
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Live UI previews — open a demo or the full case study.
+        </p>
+        <div className="mt-6 grid gap-5 lg:grid-cols-2">
+          <MomentumIdeaCard />
+          <StyleAdaptiveIdeaCard />
+        </div>
+      </div>
+
+      {additionalProjects.length > 0 && (
+        <div>
+          <h2 className="font-display text-xl font-semibold tracking-tight">
+            Additional work
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Analytics, campaigns, and other team collaborations.
+          </p>
+          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {additionalProjects.map((project) => (
+              <ProjectCard key={project.slug} project={project} />
+            ))}
+          </div>
+        </div>
       )}
     </div>
   )

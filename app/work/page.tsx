@@ -19,7 +19,7 @@ export default function WorkPage() {
           <SectionHeading
             eyebrow="Work"
             title="Projects & case studies"
-            description="The most important part of this site. Each project shows the problem, my exact contribution, the technical approach, honest limitations, and what I learned."
+            description="Try demos on this page. Each case study still has the full problem, contribution, approach, limitations, and what I learned."
           />
           <div className="mt-10">
             <WorkGrid />

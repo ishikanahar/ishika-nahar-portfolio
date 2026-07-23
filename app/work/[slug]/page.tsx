@@ -3,7 +3,11 @@ import { notFound } from 'next/navigation'
 import { projects, getProject } from '@/content/projects'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
-import { CaseStudy } from '@/components/case-study'
+import { CaseStudy } from '@/components/case-study/CaseStudy'
+import { SternsonCaseStudy } from '@/components/projects/sternson/SternsonCaseStudy'
+import { MomentumCaseStudy } from '@/components/projects/momentum/MomentumCaseStudy'
+import { OwkinCaseStudy } from '@/components/projects/owkin/OwkinCaseStudy'
+import { LuveoCaseStudy } from '@/components/projects/luveo/LuveoCaseStudy'
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }))
@@ -45,7 +49,17 @@ export default async function CaseStudyPage({
     <div className="flex min-h-dvh flex-col">
       <SiteHeader />
       <main className="flex-1">
-        <CaseStudy project={project} prev={prev} next={next} />
+        {slug === 'sternson-behavioral-ml' ? (
+          <SternsonCaseStudy />
+        ) : slug === 'momentum' ? (
+          <MomentumCaseStudy />
+        ) : slug === 'owkin-foundation-model-evaluation' ? (
+          <OwkinCaseStudy />
+        ) : slug === 'luveo-compliance-copilot' ? (
+          <LuveoCaseStudy />
+        ) : (
+          <CaseStudy project={project} prev={prev} next={next} />
+        )}
       </main>
       <SiteFooter />
     </div>

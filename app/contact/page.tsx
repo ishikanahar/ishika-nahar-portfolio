@@ -17,9 +17,8 @@ export default function ContactPage() {
         <SectionHeading
           eyebrow="Contact"
           title="Let's talk"
-          description="I'm looking for Applied AI, ML, and Data Science internships for Fall 2026 and Summer 2027. The fastest way to reach me is email."
+          description="I'm currently exploring Fall 2026 and Summer 2027 opportunities across applied AI, machine learning, data science, and AI product development."
         />
-
         <div className="mt-10 rounded-2xl border border-border bg-card p-8">
           {isRealLink(site.email) ? (
             <a
@@ -29,16 +28,9 @@ export default function ContactPage() {
               <Mail className="size-4" />
               {site.email}
             </a>
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              [Ishika: add your email in content/site.ts]
-            </p>
-          )}
-
+          ) : null}
           <div className="mt-6 flex items-center gap-3 border-t border-border/60 pt-6">
-            <span className="text-xs uppercase tracking-widest text-muted-foreground">
-              Elsewhere
-            </span>
+            <span className="text-xs uppercase tracking-widest text-muted-foreground">Elsewhere</span>
             <SocialLinks className="-ml-1" />
           </div>
         </div>

@@ -6,9 +6,9 @@ export function CapabilitiesSection() {
     <section className="border-y border-border/60 bg-secondary/30">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
         <SectionHeading
-          eyebrow="Capabilities"
-          title="Organized by what I can do"
-          description="Not a wall of logos — these are the areas where I've done real, verifiable work."
+          eyebrow="Technical Skills"
+          title="What I actually use"
+          description="Grouped by the work I've done — applied ML, AI evaluation, analytics, and scientific data."
         />
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2">
