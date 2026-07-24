@@ -264,6 +264,32 @@ html.embed .phone {
   box-shadow:0 4px 16px rgba(61,191,133,0.35); transition:transform 0.15s;
 }
 .now-cta:active { transform:scale(0.95); }
+.now-cta.autoplay-pulse {
+  animation: ctaPulse 1.6s ease-in-out infinite;
+}
+@keyframes ctaPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 4px 16px rgba(61,191,133,0.35); }
+  50% { transform: scale(1.03); box-shadow: 0 6px 22px rgba(61,191,133,0.55); }
+}
+.now-card.autoplay-glow {
+  animation: nowGlow 2.4s ease-in-out infinite;
+}
+@keyframes nowGlow {
+  0%, 100% { box-shadow: 0 8px 32px rgba(45,40,32,0.3); }
+  50% { box-shadow: 0 10px 36px rgba(61,191,133,0.28); }
+}
+.nudge.autoplay-focus {
+  outline: 2px solid var(--mint-dark);
+  outline-offset: 2px;
+  transform: scale(1.015);
+  transition: transform 0.35s ease, outline-color 0.35s ease;
+}
+.stat-val.autoplay-tick {
+  transition: color 0.35s ease, transform 0.35s ease;
+}
+.stat-val.autoplay-tick.pop {
+  transform: scale(1.12);
+}
 
 /* Stats row */
 .stats-row { display:flex; gap:10px; padding:16px 24px 0; overflow-x:auto; -webkit-overflow-scrolling:touch; }
@@ -1576,14 +1602,190 @@ function switchTab(tab) {
   }
 }
 
-// Push notification show
-setTimeout(() => {
-  document.getElementById('pushNotif1').classList.add('show');
-}, 2500);
-
 function openChatFromPush() {
   switchTab('chat');
 }
+
+// ─── AUTOPLAY DEMO TOUR (no clicks needed — for recruiters watching) ───
+const AUTOPLAY_PUSHES = [
+  {
+    icon: '🤔',
+    iconBg: 'var(--peach)',
+    title: 'Hey — CS 301 is due at 11:59 PM',
+    body: "You're at a party right now. Do you still plan on finishing it tonight?",
+  },
+  {
+    icon: '🪫',
+    iconBg: 'var(--peach)',
+    title: 'Battery at 18% — charge before 7 PM',
+    body: "Maps, Uber, and your camera die mid-party if you don't plug in.",
+  },
+  {
+    icon: '📍',
+    iconBg: 'var(--mint)',
+    title: "You're at Chipotle — 28 min left",
+    body: 'Draft the Martinez email now while you eat. Bus at 3 PM.',
+  },
+  {
+    icon: '🎉',
+    iconBg: 'var(--lavender)',
+    title: "Jake's party at 7 — day reshuffled",
+    body: 'CS 301 moved to 4–6 PM. Gym bumped to tomorrow 8 AM.',
+  },
+];
+
+const AUTOPLAY_NOW = [
+  {
+    title: "You're eating.<br>Use this time wisely.",
+    sub: 'Prof. Martinez email is overdue · CS 301 due at 11:59 PM · Party at 7 PM — schedule adjusted.',
+    cta: '✏️ Draft Email Now',
+  },
+  {
+    title: 'Party in 4 hours.<br>Protect your battery.',
+    sub: '18% left · charge now or lose Maps + Uber tonight. CS 301 still needs a 2h block.',
+    cta: '🔌 Find a charger',
+  },
+  {
+    title: 'Context shifted.<br>I reshuffled your day.',
+    sub: 'Gym → tomorrow 8 AM · CS 301 → 4–6 PM · Email → bus ride at 3 PM.',
+    cta: '📅 See new plan',
+  },
+];
+
+const AUTOPLAY_CTX = [
+  { text: '📍 Chipotle, Mission St', sub: 'Eating lunch · HR 72 bpm · ~28 min left' },
+  { text: '🚌 Bus to campus', sub: '35 min ride · draft email window open' },
+  { text: '📚 Geisel Library', sub: 'Focus mode · CS 301 block 4–6 PM' },
+];
+
+function setPushContent(push) {
+  const el = document.getElementById('pushNotif1');
+  if (!el) return;
+  const icon = el.querySelector('.push-icon');
+  const title = el.querySelector('.push-title');
+  const body = el.querySelector('.push-body');
+  if (icon) {
+    icon.textContent = push.icon;
+    icon.style.background = push.iconBg;
+  }
+  if (title) title.textContent = push.title;
+  if (body) body.textContent = push.body;
+}
+
+function showPush(push) {
+  setPushContent(push);
+  const el = document.getElementById('pushNotif1');
+  if (!el) return;
+  el.classList.remove('show');
+  // reflow so the slide-in restarts
+  void el.offsetWidth;
+  el.classList.add('show');
+}
+
+function hidePush() {
+  document.getElementById('pushNotif1')?.classList.remove('show');
+}
+
+function startMomentumAutoplay() {
+  const screen = document.getElementById('screen');
+  const nowCard = document.querySelector('.now-card');
+  const nowTitle = document.querySelector('.now-title');
+  const nowSub = document.querySelector('.now-sub');
+  const nowCta = document.querySelector('.now-cta');
+  const ctxText = document.querySelector('.ctx-text');
+  const ctxSub = document.querySelector('.ctx-sub');
+  const bpmEl = document.querySelector('.stat-chip .stat-val');
+  const nudges = [...document.querySelectorAll('#tab-home .nudge')];
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reduceMotion) {
+    showPush(AUTOPLAY_PUSHES[0]);
+    return;
+  }
+
+  nowCard?.classList.add('autoplay-glow');
+  nowCta?.classList.add('autoplay-pulse');
+
+  let step = 0;
+  let bpm = 72;
+
+  const tickBpm = () => {
+    if (!bpmEl) return;
+    bpm = 68 + Math.floor(Math.random() * 10);
+    bpmEl.classList.add('autoplay-tick', 'pop');
+    bpmEl.textContent = String(bpm);
+    setTimeout(() => bpmEl.classList.remove('pop'), 320);
+  };
+
+  const applyNow = (scene) => {
+    if (nowTitle) nowTitle.innerHTML = scene.title;
+    if (nowSub) nowSub.textContent = scene.sub;
+    if (nowCta) nowCta.textContent = scene.cta;
+  };
+
+  const applyCtx = (scene) => {
+    if (ctxText) ctxText.textContent = scene.text;
+    if (ctxSub) ctxSub.textContent = scene.sub;
+  };
+
+  const focusNudge = (i) => {
+    nudges.forEach((n, idx) => n.classList.toggle('autoplay-focus', idx === i));
+  };
+
+  const runStep = () => {
+    // Stay on home so the living product UI is always visible
+    if (document.querySelector('#tab-home') && !document.getElementById('tab-home').classList.contains('active')) {
+      switchTab('home');
+    }
+
+    const phase = step % 8;
+
+    if (phase === 0) {
+      hidePush();
+      applyNow(AUTOPLAY_NOW[0]);
+      applyCtx(AUTOPLAY_CTX[0]);
+      focusNudge(-1);
+      if (screen) screen.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => showPush(AUTOPLAY_PUSHES[step % AUTOPLAY_PUSHES.length]), 500);
+    } else if (phase === 1) {
+      tickBpm();
+    } else if (phase === 2) {
+      hidePush();
+      if (screen) screen.scrollTo({ top: 220, behavior: 'smooth' });
+      focusNudge(0);
+    } else if (phase === 3) {
+      focusNudge(1);
+      applyNow(AUTOPLAY_NOW[1]);
+      applyCtx(AUTOPLAY_CTX[1]);
+      tickBpm();
+    } else if (phase === 4) {
+      focusNudge(2);
+      showPush(AUTOPLAY_PUSHES[(step + 1) % AUTOPLAY_PUSHES.length]);
+    } else if (phase === 5) {
+      hidePush();
+      if (screen) screen.scrollTo({ top: 420, behavior: 'smooth' });
+      applyNow(AUTOPLAY_NOW[2]);
+      applyCtx(AUTOPLAY_CTX[2]);
+      tickBpm();
+    } else if (phase === 6) {
+      focusNudge(0);
+      showPush(AUTOPLAY_PUSHES[(step + 2) % AUTOPLAY_PUSHES.length]);
+    } else if (phase === 7) {
+      hidePush();
+      focusNudge(-1);
+      if (screen) screen.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    step += 1;
+  };
+
+  // Kick off quickly so embeds feel alive immediately
+  setTimeout(runStep, 700);
+  setInterval(runStep, 2800);
+  setInterval(tickBpm, 4200);
+}
+
+window.addEventListener('load', startMomentumAutoplay);
 
 // Task toggle
 function toggleTask(task) {
@@ -1842,8 +2044,11 @@ function dropPokemon() {
   pokemon.addEventListener('animationend', () => pokemon.remove());
 }
 
-setInterval(dropPokemon, 850);
-for (let i = 0; i < 6; i++) setTimeout(dropPokemon, i * 240);
+// Keep decorative rain off in portfolio embeds so the product autoplay stays the focus
+if (!document.documentElement.classList.contains('embed')) {
+  setInterval(dropPokemon, 850);
+  for (let i = 0; i < 6; i++) setTimeout(dropPokemon, i * 240);
+}
 
 const wandCursor = document.getElementById('wandCursor');
 let lastSparkle = 0;

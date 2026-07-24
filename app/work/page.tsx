@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
-import { SectionHeading } from '@/components/section-heading'
 import { WorkGrid } from '@/components/work-grid'
 
 export const metadata: Metadata = {
@@ -15,15 +14,16 @@ export default function WorkPage() {
     <div className="flex min-h-dvh flex-col">
       <SiteHeader />
       <main className="flex-1">
-        <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-          <SectionHeading
-            eyebrow="Work"
-            title="Projects & case studies"
-            description="Everything in one place — open a card for the full case study, or try demos from the homepage."
-          />
-          <div className="mt-10">
-            <WorkGrid />
+        <section className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
+          <div className="mb-4 flex items-baseline justify-between gap-3">
+            <h1 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">
+              Projects
+            </h1>
+            <p className="text-xs text-muted-foreground">
+              All work · tap a card
+            </p>
           </div>
+          <WorkGrid />
         </section>
       </main>
       <SiteFooter />

@@ -172,9 +172,138 @@
   transform-origin: center;
 }
 
+/* Work page — card entrance + live preview motion */
+@keyframes work-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.work-card-enter {
+  animation: work-card-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--work-delay, 0ms);
+}
+
+@keyframes work-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.work-cta-shimmer {
+  background-image: linear-gradient(
+    110deg,
+    transparent 0%,
+    transparent 40%,
+    color-mix(in oklch, white 22%, transparent) 50%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+}
+
+.group:hover .work-cta-shimmer {
+  animation: work-shimmer 1.1s ease-in-out;
+}
+
+@keyframes luveo-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0.15);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes nudge-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes style-tab-cycle {
+  0%,
+  28% {
+    opacity: 1;
+  }
+  33%,
+  95% {
+    opacity: 0.35;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes timeline-scan {
+  0% {
+    left: 6%;
+  }
+  100% {
+    left: 78%;
+  }
+}
+
+.animate-luveo-pulse {
+  animation: luveo-pulse 2.4s ease-in-out infinite;
+}
+
+.animate-bar-grow {
+  transform-origin: left center;
+  animation: bar-grow 1.8s ease-out infinite alternate;
+}
+
+.animate-nudge-float {
+  animation: nudge-float 2.8s ease-in-out infinite;
+}
+
+.animate-style-tab {
+  animation: style-tab-cycle 4.5s ease-in-out infinite;
+}
+
+.animate-timeline-scan {
+  animation: timeline-scan 3.2s ease-in-out infinite alternate;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-flow,
-  .animate-node {
-    animation: none;
+  .animate-node,
+  .work-card-enter,
+  .work-cta-shimmer,
+  .animate-luveo-pulse,
+  .animate-bar-grow,
+  .animate-nudge-float,
+  .animate-style-tab,
+  .animate-timeline-scan {
+    animation: none !important;
+  }
+
+  .work-card-enter {
+    opacity: 1;
+    transform: none;
   }
 }
