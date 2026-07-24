@@ -102,7 +102,7 @@ export function ProjectCard({
             accent={accent}
             preview={preview}
           />
-          <div className="absolute inset-x-0 top-0 flex flex-wrap gap-1 p-2">
+          <div className="absolute inset-x-0 top-0 z-10 flex flex-wrap gap-1 p-2">
             <span className="rounded bg-background/90 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-foreground backdrop-blur">
               {project.context}
             </span>
@@ -146,7 +146,12 @@ export function ProjectCard({
           )}
 
           {metric && (
-            <p className={cn('font-medium text-primary', compact ? 'mt-1.5 text-[10px]' : 'mt-2 text-[11px]')}>
+            <p
+              className={cn(
+                'font-medium text-primary',
+                compact ? 'mt-1.5 text-[10px]' : 'mt-2 text-[11px]',
+              )}
+            >
               {metric}
             </p>
           )}
@@ -195,10 +200,10 @@ function LivePreview({
   if (slug === 'luveo-compliance-copilot') return <LuveoLive />
   if (slug === 'momentum') return <MomentumLive />
   if (slug === 'style-adaptive-extraction') return <StyleLive />
-  if (slug === 'sternson-behavioral-ml') return <SternsonLive src={preview?.src} alt={preview?.alt} />
-  if (slug === 'owkin-foundation-model-evaluation') {
-    return <OwkinLive src={preview?.src} alt={preview?.alt} />
-  }
+  if (slug === 'sternson-behavioral-ml') return <SternsonLive />
+  if (slug === 'owkin-foundation-model-evaluation') return <OwkinLive />
+  if (slug === 'health-text-robustness') return <RobustnessLive />
+  if (slug === 'neural-decoder-steinmetz') return <NeuralLive />
 
   if (preview) {
     return (
@@ -227,31 +232,58 @@ function LivePreview({
 
 function LuveoLive() {
   const statuses = [
-    { label: 'BLOCKED', color: 'border-rose-500/40 text-rose-400 bg-rose-500/10' },
-    { label: 'REVIEW', color: 'border-amber-500/40 text-amber-300 bg-amber-500/10' },
-    { label: 'PASS', color: 'border-emerald-500/40 text-emerald-400 bg-emerald-500/10' },
-  ]
+    { label: 'BLOCKED', color: 'border-rose-500/40 text-rose-400 bg-rose-500/10', step: 2 },
+    { label: 'REVIEW', color: 'border-amber-500/40 text-amber-300 bg-amber-500/10', step: 4 },
+    { label: 'PASS', color: 'border-emerald-500/40 text-emerald-400 bg-emerald-500/10', step: 6 },
+  ] as const
+  const pipeline = ['Event', 'Normalize', 'Rules', 'CaseView', 'Explain', 'Trace']
   const [i, setI] = useState(0)
+  const [pipe, setPipe] = useState(0)
 
   useEffect(() => {
-    const id = window.setInterval(() => setI((v) => (v + 1) % statuses.length), 1600)
+    const id = window.setInterval(() => {
+      setI((v) => (v + 1) % statuses.length)
+      setPipe(0)
+    }, 2200)
     return () => window.clearInterval(id)
   }, [statuses.length])
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setPipe((p) => (p >= statuses[i].step ? p : p + 1))
+    }, 280)
+    return () => window.clearInterval(id)
+  }, [i, statuses])
 
   const active = statuses[i]
 
   return (
     <div className="flex h-full w-full flex-col justify-between bg-[#07111d] p-3 text-[#eef6ff]">
-      <p className="text-[9px] font-semibold uppercase tracking-wider text-[#48d7ce]">
-        Compliance Copilot
-      </p>
-      <div className="space-y-1.5">
+      <div className="flex flex-wrap gap-1">
+        {pipeline.map((label, idx) => (
+          <span
+            key={label}
+            className={cn(
+              'rounded border px-1.5 py-0.5 text-[8px] font-medium transition-all duration-300',
+              idx < pipe
+                ? 'border-[#48d7ce]/50 bg-[#15314a] text-[#48d7ce]'
+                : 'border-[#263b52] text-[#9eb1c5]/70',
+            )}
+          >
+            {idx < pipe ? '✓ ' : ''}
+            {label}
+          </span>
+        ))}
+      </div>
+      <div className="space-y-1">
         {statuses.map((s, idx) => (
           <div
             key={s.label}
             className={cn(
-              'rounded-md border px-2 py-1.5 text-[10px] font-medium transition-all duration-500',
-              idx === i ? `${s.color} scale-[1.02]` : 'border-[#263b52] bg-[#0e1b2b] text-[#9eb1c5] opacity-50',
+              'rounded-md border px-2 py-1 text-[10px] font-medium transition-all duration-500',
+              idx === i
+                ? `${s.color} scale-[1.02]`
+                : 'border-[#263b52] bg-[#0e1b2b] text-[#9eb1c5] opacity-45',
             )}
           >
             {s.label} · event → rules → explain
@@ -357,9 +389,7 @@ function StyleLive() {
       <p className="text-[9px] font-semibold uppercase tracking-wider text-[#5eead4]">
         Clinical NLP
       </p>
-      <p className="mt-0.5 font-display text-xs font-semibold">
-        Style → adapted extract
-      </p>
+      <p className="mt-0.5 font-display text-xs font-semibold">Style → adapted extract</p>
       <div className="mt-2 grid grid-cols-3 gap-1 text-center text-[9px]">
         {styles.map((s, idx) => (
           <span
@@ -379,64 +409,284 @@ function StyleLive() {
   )
 }
 
-function SternsonLive({ src, alt }: { src?: string; alt?: string }) {
+function SternsonLive() {
+  const labels = ['DEM', 'OBS', 'approach', 'contact']
+  const [active, setActive] = useState(0)
+
+  useEffect(() => {
+    const id = window.setInterval(() => setActive((v) => (v + 1) % labels.length), 1200)
+    return () => window.clearInterval(id)
+  }, [labels.length])
+
   return (
-    <div className="relative h-full w-full">
-      {src ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={src}
-          alt={alt ?? ''}
-          className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
-        />
-      ) : (
-        <div className="h-full w-full bg-secondary" />
-      )}
-      <div className="absolute inset-x-2 bottom-2 rounded-md border border-border/70 bg-card/90 p-2 backdrop-blur">
-        <div className="relative h-1.5 overflow-hidden rounded-full bg-secondary">
-          <span className="absolute top-0 h-full w-[18%] rounded-full bg-orange-500/80 animate-timeline-scan" />
-          <span className="absolute left-[40%] top-0 h-full w-[12%] rounded-full bg-violet-500/70" />
+    <div className="relative h-full w-full bg-black">
+      <video
+        className="h-full w-full object-cover opacity-90"
+        src="/projects/sternson/sternson-demo.mp4"
+        poster="/projects/sternson/pyqt-orientation-editor.png"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+      />
+      <div className="absolute inset-x-2 bottom-2 rounded-md border border-white/15 bg-black/70 p-2 backdrop-blur">
+        <div className="mb-1 flex gap-1">
+          {labels.map((label, idx) => (
+            <span
+              key={label}
+              className={cn(
+                'rounded px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-wide transition-all duration-300',
+                idx === active
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-white/10 text-white/55',
+              )}
+            >
+              {label}
+            </span>
+          ))}
         </div>
-        <p className="mt-1 text-[9px] font-medium text-muted-foreground">
-          Timeline scanning · DEM / OBS
+        <div className="relative h-1.5 overflow-hidden rounded-full bg-white/15">
+          <span className="absolute top-0 h-full w-[18%] rounded-full bg-orange-400 animate-timeline-scan" />
+          <span className="absolute left-[42%] top-0 h-full w-[14%] rounded-full bg-violet-400/90" />
+        </div>
+        <p className="mt-1 text-[9px] font-medium text-white/70">
+          Live arena · labeling {labels[active]}
         </p>
       </div>
     </div>
   )
 }
 
-function OwkinLive({ src, alt }: { src?: string; alt?: string }) {
+const OWKIN_CLAIMS = [
+  {
+    label: 'Tumor',
+    img: '/projects/owkin/tumor_epithelium.png',
+    scores: [
+      ['Nec', 0.46],
+      ['Suf', 0.51],
+      ['Spec', 0.8],
+    ] as const,
+    verdict: 'SUPPORTED',
+  },
+  {
+    label: 'Stroma',
+    img: '/projects/owkin/stroma.png',
+    scores: [
+      ['Nec', 0.62],
+      ['Suf', 0.44],
+      ['Spec', 0.71],
+    ] as const,
+    verdict: 'MIXED',
+  },
+  {
+    label: 'Immune',
+    img: '/projects/owkin/immune_infiltrate.png',
+    scores: [
+      ['Nec', 0.38],
+      ['Suf', 0.67],
+      ['Spec', 0.74],
+    ] as const,
+    verdict: 'SUPPORTED',
+  },
+]
+
+function OwkinLive() {
+  const [i, setI] = useState(0)
+  const claim = OWKIN_CLAIMS[i]
+
+  useEffect(() => {
+    const id = window.setInterval(() => setI((v) => (v + 1) % OWKIN_CLAIMS.length), 2000)
+    return () => window.clearInterval(id)
+  }, [])
+
   return (
-    <div className="relative h-full w-full">
-      {src ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={src}
-          alt={alt ?? ''}
-          className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
-        />
-      ) : null}
-      <div className="absolute inset-x-2 bottom-2 grid grid-cols-3 gap-1">
-        {[
-          ['Nec', '0.46'],
-          ['Suf', '0.51'],
-          ['Spec', '0.80'],
-        ].map(([label, val], i) => (
-          <div
-            key={label}
-            className="rounded border border-white/15 bg-[#0a0f18]/85 px-1.5 py-1 text-center backdrop-blur"
+    <div className="relative h-full w-full bg-[#0a0f18]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        key={claim.img}
+        src={claim.img}
+        alt=""
+        className="h-full w-full object-cover opacity-80 transition-opacity duration-500"
+      />
+      <div className="absolute inset-x-2 top-7 flex gap-1">
+        {OWKIN_CLAIMS.map((c, idx) => (
+          <span
+            key={c.label}
+            className={cn(
+              'rounded px-1.5 py-0.5 text-[8px] font-semibold transition-all duration-300',
+              idx === i
+                ? 'bg-[#5eead4] text-[#0a0f18]'
+                : 'bg-black/50 text-white/60 backdrop-blur',
+            )}
           >
-            <p className="text-[8px] uppercase text-white/50">{label}</p>
-            <p className="font-display text-[11px] font-semibold text-[#5eead4]">{val}</p>
-            <div className="mx-auto mt-0.5 h-0.5 w-full overflow-hidden rounded-full bg-white/10">
-              <div
-                className="animate-bar-grow h-full rounded-full bg-[#5eead4]"
-                style={{ animationDelay: `${i * 0.25}s`, width: `${Number(val) * 100}%` }}
-              />
+            {c.label}
+          </span>
+        ))}
+      </div>
+      <div className="absolute inset-x-2 bottom-2 space-y-1">
+        <div className="flex items-center justify-between rounded border border-white/15 bg-[#0a0f18]/85 px-2 py-1 backdrop-blur">
+          <span className="text-[9px] font-semibold text-[#5eead4]">certify({claim.label})</span>
+          <span className="text-[8px] font-bold text-emerald-300">{claim.verdict}</span>
+        </div>
+        <div className="grid grid-cols-3 gap-1">
+          {claim.scores.map(([label, val], idx) => (
+            <div
+              key={`${claim.label}-${label}`}
+              className="rounded border border-white/15 bg-[#0a0f18]/85 px-1.5 py-1 text-center backdrop-blur"
+            >
+              <p className="text-[8px] uppercase text-white/50">{label}</p>
+              <p className="font-display text-[11px] font-semibold text-[#5eead4]">
+                {val.toFixed(2)}
+              </p>
+              <div className="mx-auto mt-0.5 h-0.5 w-full overflow-hidden rounded-full bg-white/10">
+                <div
+                  className="h-full rounded-full bg-[#5eead4] transition-all duration-700"
+                  style={{
+                    width: `${val * 100}%`,
+                    transitionDelay: `${idx * 80}ms`,
+                  }}
+                />
+              </div>
             </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const ROBUST_SCENES = [
+  {
+    name: 'Clean',
+    bars: [
+      { model: 'TF-IDF', h: 72, color: 'bg-orange-400' },
+      { model: 'LSTM', h: 78, color: 'bg-sky-400' },
+      { model: 'DistilBERT', h: 92, color: 'bg-emerald-400' },
+    ],
+  },
+  {
+    name: 'Typo',
+    bars: [
+      { model: 'TF-IDF', h: 68, color: 'bg-orange-400' },
+      { model: 'LSTM', h: 55, color: 'bg-sky-400' },
+      { model: 'DistilBERT', h: 74, color: 'bg-emerald-400' },
+    ],
+  },
+  {
+    name: 'Synonym',
+    bars: [
+      { model: 'TF-IDF', h: 48, color: 'bg-orange-400' },
+      { model: 'LSTM', h: 61, color: 'bg-sky-400' },
+      { model: 'DistilBERT', h: 81, color: 'bg-emerald-400' },
+    ],
+  },
+  {
+    name: 'Drop',
+    bars: [
+      { model: 'TF-IDF', h: 40, color: 'bg-orange-400' },
+      { model: 'LSTM', h: 52, color: 'bg-sky-400' },
+      { model: 'DistilBERT', h: 70, color: 'bg-emerald-400' },
+    ],
+  },
+]
+
+function RobustnessLive() {
+  const [i, setI] = useState(0)
+  const scene = ROBUST_SCENES[i]
+
+  useEffect(() => {
+    const id = window.setInterval(() => setI((v) => (v + 1) % ROBUST_SCENES.length), 1600)
+    return () => window.clearInterval(id)
+  }, [])
+
+  return (
+    <div className="flex h-full w-full flex-col justify-between bg-[#0f1720] p-3 text-[#e8eef7]">
+      <div className="flex items-center justify-between">
+        <p className="text-[9px] font-semibold uppercase tracking-wider text-[#5eead4]">
+          Stress test
+        </p>
+        <div className="flex gap-1">
+          {ROBUST_SCENES.map((s, idx) => (
+            <span
+              key={s.name}
+              className={cn(
+                'rounded px-1.5 py-0.5 text-[8px] font-semibold transition-all duration-300',
+                idx === i ? 'bg-[#5eead4] text-[#0f1720]' : 'bg-white/10 text-white/50',
+              )}
+            >
+              {s.name}
+            </span>
+          ))}
+        </div>
+      </div>
+      <div className="mt-2 flex h-[58%] items-end justify-around gap-2 px-1">
+        {scene.bars.map((b) => (
+          <div key={b.model} className="flex h-full w-1/4 flex-col items-center justify-end gap-1">
+            <div
+              className={cn('w-full rounded-t-sm transition-all duration-700', b.color)}
+              style={{ height: `${b.h}%` }}
+            />
+            <span className="text-[8px] font-medium text-white/60">{b.model}</span>
           </div>
         ))}
       </div>
+      <p className="text-[9px] text-white/55">
+        Macro F1 shifts under <span className="font-semibold text-[#5eead4]">{scene.name}</span>
+      </p>
+    </div>
+  )
+}
+
+function NeuralLive() {
+  const [choice, setChoice] = useState<'L' | 'R'>('L')
+  const [auc, setAuc] = useState(0.72)
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setChoice((c) => (c === 'L' ? 'R' : 'L'))
+      setAuc(0.78 + Math.random() * 0.12)
+    }, 1500)
+    return () => window.clearInterval(id)
+  }, [])
+
+  return (
+    <div className="flex h-full w-full flex-col justify-between bg-[#101820] p-3 text-[#e8eef7]">
+      <div className="flex items-center justify-between">
+        <p className="text-[9px] font-semibold uppercase tracking-wider text-[#7dd3fc]">
+          Neuropixels decode
+        </p>
+        <span className="rounded bg-[#7dd3fc]/15 px-1.5 py-0.5 font-mono text-[9px] text-[#7dd3fc]">
+          AUC {auc.toFixed(3)}
+        </span>
+      </div>
+
+      <div className="mt-2 grid grid-cols-2 gap-2">
+        {(['L', 'R'] as const).map((side) => (
+          <div
+            key={side}
+            className={cn(
+              'rounded-lg border px-2 py-3 text-center transition-all duration-500',
+              choice === side
+                ? 'scale-[1.03] border-[#7dd3fc] bg-[#7dd3fc]/15 shadow-[0_0_18px_rgba(125,211,252,0.25)]'
+                : 'border-white/10 bg-white/5 opacity-50',
+            )}
+          >
+            <p className="font-display text-lg font-semibold">{side === 'L' ? '← Left' : 'Right →'}</p>
+            <p className="mt-0.5 text-[9px] text-white/55">
+              {choice === side ? 'decoded now' : 'waiting'}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
+        <div
+          className="h-full rounded-full bg-[#7dd3fc] transition-all duration-700"
+          style={{ width: `${auc * 100}%` }}
+        />
+      </div>
+      <p className="text-[9px] text-white/55">Population activity → choice</p>
     </div>
   )
 }
