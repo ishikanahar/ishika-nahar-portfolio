@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     template: '%s · Ishika',
   },
   description:
-    'UC San Diego student building practical, reliable AI systems from data to product. Portfolio of applied machine learning, AI evaluation, and data science work across healthcare, behavioral, and biomedical data.',
+    'Let’s build the things we wish already existed. Applied AI, data science, and machine learning portfolio — UC San Diego.',
   keywords: [
     'Ishika',
     'Ishika Nahar',
@@ -45,16 +45,25 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Ishika — Applied AI, Data Science & Machine Learning',
     description:
-      'Building practical, reliable AI systems from data to product. Applied ML, AI evaluation, and data science portfolio.',
+      'Let’s build the things we wish already existed. Applied ML, AI evaluation, and data science.',
     type: 'website',
     locale: 'en_US',
     url: 'https://ishikanahar.com',
+    images: [
+      {
+        url: '/og.png',
+        width: 1200,
+        height: 630,
+        alt: 'Ishika Nahar — Applied AI, Data Science & Machine Learning',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Ishika — Applied AI, Data Science & Machine Learning',
     description:
-      'Building practical, reliable AI systems from data to product.',
+      'Let’s build the things we wish already existed.',
+    images: ['/og.png'],
   },
   generator: 'v0.app',
 }
