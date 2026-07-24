@@ -53,6 +53,14 @@ const BLURBS: Record<string, string> = {
     'certify(prediction) evidence cards for pathology FM claims.',
 }
 
+/** Deep-link to the interactive section when a case study has one. */
+const CASE_STUDY_HASH: Record<string, string> = {
+  'sternson-behavioral-ml': '#demo',
+  'luveo-compliance-copilot': '#walkthrough',
+  'owkin-foundation-model-evaluation': '#certify',
+  momentum: '#demo',
+}
+
 const METRICS: Record<string, string> = {
   'sternson-behavioral-ml': '0.85 ROC-AUC · 8.2k frames',
   'owkin-foundation-model-evaluation': '1st place · Owkin hackathon',
@@ -89,7 +97,10 @@ export function ProjectCard({
       )}
       style={{ '--work-delay': `${Math.min(index, 8) * 45}ms` } as CSSProperties}
     >
-      <Link href={`/work/${project.slug}`} className="flex flex-1 flex-col">
+      <Link
+        href={`/work/${project.slug}${CASE_STUDY_HASH[project.slug] ?? ''}`}
+        className="flex flex-1 flex-col"
+      >
         <div
           className={cn(
             'relative overflow-hidden bg-secondary/40',
