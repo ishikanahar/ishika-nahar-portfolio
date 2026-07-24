@@ -389,7 +389,7 @@ export function SternsonCaseStudy() {
                   implementation={c.implementation}
                   limitation={c.limitation}
                   formula={c.formula}
-                  defaultOpen={i < 2}
+                  defaultOpen={i === 1}
                 />
               ))}
             </div>

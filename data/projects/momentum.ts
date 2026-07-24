@@ -3,7 +3,7 @@ export const momentum = {
   title: 'MOMentum: A Context-Aware Personal AI OS',
   headline: 'What if your AI noticed what you needed before you had to ask?',
   oneLiner:
-    'A personal AI prototype that combines tasks, location, routines, and device context to deliver timely guidance — not only chat replies.',
+    'A personal AI that uses tasks, location, routines, and device context to nudge you at the right moment — not only when you open chat.',
   status: 'Idea in progress · FastAPI + RAG backend running locally',
   context: 'Independent · UC San Diego × Y Combinator Hackathon',
   demoUrl: 'https://ishikanahar.github.io/momentum/frontend/',

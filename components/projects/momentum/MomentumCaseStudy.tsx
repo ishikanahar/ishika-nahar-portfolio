@@ -175,11 +175,11 @@ export function MomentumCaseStudy() {
               Product demonstration — personal context in the UI is simulated.
               Chat may use offline fallbacks on the public host.
             </p>
-            <div className="mx-auto max-w-[420px] overflow-hidden rounded-[2rem] border-4 border-foreground/20 bg-card shadow-xl">
+            <div className="mx-auto max-w-[460px] overflow-hidden rounded-2xl bg-[#d8d3cc] shadow-xl dark:bg-[#0a0810]">
               <iframe
                 title="MOMentum interactive prototype"
-                src={m.localDemo}
-                className="h-[720px] w-full bg-background"
+                src={`${m.localDemo}?embed=1`}
+                className="h-[min(82vh,860px)] w-full"
                 loading="lazy"
               />
             </div>

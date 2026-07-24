@@ -10,7 +10,7 @@ export function SiteFooter() {
         <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <div className="max-w-md">
             <p className="font-display text-xl font-semibold tracking-tight text-balance">
-              Let&apos;s build something reliable together.
+              Let&apos;s build the things we wish already existed.
             </p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               Open to Applied AI, ML, and Data Science internships for Fall 2026

@@ -260,14 +260,14 @@ export const projects: Project[] = [
     slug: 'momentum',
     title: 'MOMentum',
     summary:
-      'Context-aware personal AI prototype combining RAG with structured user state (tasks, location, focus, device signals) for proactive nudges and chat.',
+      'Personal AI prototype that combines tasks, location, focus, and device signals so the system can nudge you at the right moment — not only answer when you open chat.',
     organization: 'Independent · UC San Diego × Y Combinator Hackathon',
     context: 'Independent',
     timeline: '2025 – Present',
     categories: ['Applied AI', 'Product'],
     coreTech: ['FastAPI', 'Claude API', 'sentence-transformers', 'FAISS'],
     headlineResult:
-      'Interactive frontend live; FastAPI + RAG + Claude MVP implemented locally.',
+      'Live mobile UI + local FastAPI/RAG/Claude MVP for chat and proactive nudges.',
     featured: false,
     workGroup: 'ideas',
     accent: 4,
@@ -285,9 +285,9 @@ export const projects: Project[] = [
       },
     ],
     problem:
-      'Students juggle deadlines, location changes, energy, and distractions. Existing tools wait for a prompt instead of combining fragmented context into timely guidance.',
+      'Students juggle deadlines, location changes, energy, and distractions. Most tools wait for a prompt instead of combining those signals into timely, situational guidance.',
     whyItMatters:
-      'Proactive, context-aware assistance can turn fragmented signals into timely decisions — if the system stays honest about what is prototype vs production.',
+      'A useful personal AI needs structured context and a policy for when to speak — not only a chat box.',
     data: [
       'Structured user-state fields (tasks, location, battery, focus, sleep, screen time).',
       'Demo knowledge base embedded with sentence-transformers into an in-memory FAISS index.',
@@ -546,22 +546,22 @@ export const projects: Project[] = [
 
   {
     slug: 'style-adaptive-extraction',
-    title: 'Style-Adaptive Representation Extraction',
+    title: 'Style-Adaptive Clinical Note Extraction',
     summary:
-      'Interactive exploration of how pathology-style features and adaptive extraction choices change what a model can surface from tissue tiles.',
+      'Classify a physician’s writing style first, then route clinical notes to a style-adapted extraction prompt — so terse, narrative, and hedged notes don’t fail silently under one generic LLM prompt.',
     organization: 'Independent exploration',
     context: 'Independent',
     timeline: '2026',
-    categories: ['Applied AI', 'Research', 'Healthcare'],
-    coreTech: ['Embeddings', 'Interactive viz', 'Pathology AI'],
+    categories: ['Applied AI', 'Healthcare', 'Research'],
+    coreTech: ['LLM prompting', 'Clinical NLP', 'Interactive demo'],
     headlineResult:
-      'Browser demo for comparing adaptive extraction paths and readout quality.',
+      'Interactive proof-of-concept comparing generic vs style-adapted extraction across three oncology writing styles.',
     featured: false,
     workGroup: 'ideas',
     accent: 3,
     statusBadge: 'Idea',
     ctaLabel: 'Open interactive demo',
-    role: 'Designed an interactive HTML exploration of adaptive extraction ideas.',
+    role: 'Designed and built an interactive HTML prototype for style-aware clinical note extraction.',
     links: [
       {
         label: 'Interactive demo',
@@ -569,34 +569,42 @@ export const projects: Project[] = [
       },
     ],
     problem:
-      'Static embedding pipelines hide how extraction choices affect what becomes visible in tissue representations.',
+      'Oncologists write radically differently — some terse and abbreviated, some narrative, some uncertainty-heavy. A single generic LLM extraction prompt treats every note the same, which creates confident but wrong extractions that can slip past review.',
     whyItMatters:
-      'Before committing to a full evaluation stack, it helps to probe how style and extraction settings change the story.',
-    data: ['Illustrative pathology-style tile / embedding views for exploration.'],
+      'At clinical-data scale, style variation is a silent failure mode. Adapting the prompt to the writer’s style (instead of forcing one template) can surface the fields a human abstractor would actually catch.',
+    data: [
+      'Synthetic oncology notes illustrating terse, narrative, and uncertainty-heavy styles.',
+      'Side-by-side generic vs style-adapted field extraction for comparison.',
+    ],
     approach:
-      'Interactive controls and visual comparisons for adaptive extraction concepts, kept clearly exploratory.',
+      'Classify writing style → run a generic baseline prompt → run a style-adapted prompt → compare extracted fields and accuracy so the gap is inspectable.',
     pipeline: [
-      { label: 'Tile / style view', detail: 'Local tissue context' },
-      { label: 'Extraction choice', detail: 'Adaptive vs fixed path' },
-      { label: 'Readout', detail: 'What becomes decodable' },
-      { label: 'Compare', detail: 'Interactive inspection' },
+      { label: 'Note', detail: 'Oncology clinical text' },
+      { label: 'Style classify', detail: 'Terse · narrative · hedged' },
+      { label: 'Generic extract', detail: 'One-size prompt baseline' },
+      { label: 'Adapted extract', detail: 'Prompt tuned to that style' },
+      { label: 'Compare', detail: 'Fields + accuracy gap' },
     ],
     contribution: [
-      'Built the interactive exploration surface for style-adaptive extraction ideas.',
+      'Built the interactive comparison surface for style-adaptive extraction.',
+      'Encoded three physician styles with explicit generic vs adapted outcomes.',
+      'Grounded the idea in published work on physician-specific NLP and note preprocessing.',
     ],
     technicalDetails: [
-      'Client-side HTML/JS demo. Not a trained production model.',
+      'Client-side HTML/JS proof of concept — not a trained production model.',
+      'Extraction results are scripted comparisons for walkthrough clarity.',
     ],
     challenges: [
       'Keeping exploratory UI honest about what is simulated vs measured.',
+      'Showing why style adaptation helps without overclaiming clinical readiness.',
     ],
     results: [
-      'Shipped a clickable demo for walking through adaptive extraction concepts.',
+      'Shipped a clickable demo: pick a note style, run extraction, see where the generic prompt fails.',
     ],
     limitations:
-      'Exploratory idea demo, not a completed research study or clinical tool.',
+      'Exploratory idea demo, not a completed research study or clinical tool. Scores are illustrative for the walkthrough.',
     learned:
-      'Good interaction design makes representation choices inspectable before they harden into a pipeline.',
+      'For clinical NLP, adapting to how a physician writes can matter as much as the model you call.',
   },
 
   {

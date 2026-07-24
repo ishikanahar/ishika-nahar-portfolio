@@ -77,14 +77,14 @@ export function LandingDemos() {
   if (!ready) {
     return (
       <section id="demos" className="scroll-mt-20 border-b border-border/60 bg-secondary/25">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
           <p className="text-[11px] font-semibold uppercase tracking-widest text-primary">
             Try before you scroll
           </p>
           <h2 className="mt-1 font-display text-2xl font-semibold tracking-tight sm:text-3xl">
             Interactive demos on the homepage
           </h2>
-          <div className="mt-6 h-[320px] animate-pulse rounded-2xl border border-border bg-card/60" />
+          <div className="mt-6 h-[420px] animate-pulse rounded-2xl border border-border bg-card/60" />
         </div>
       </section>
     )
@@ -92,7 +92,7 @@ export function LandingDemos() {
 
   return (
     <section id="demos" className="scroll-mt-20 border-b border-border/60 bg-secondary/25">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-widest text-primary">
             Try before you scroll
@@ -152,25 +152,25 @@ export function LandingDemos() {
           {tab === 'momentum' && (
             <HtmlEmbed
               title="MOMentum"
-              blurb="Context-aware personal AI — chat, nudges, and world state."
-              src="/projects/momentum/index.html"
+              blurb="A personal AI that uses tasks, location, and device context to nudge you at the right moment — not only when you open chat."
+              src="/projects/momentum/index.html?embed=1"
               caseHref="/work/momentum"
               caseLabel="MOMentum case study"
               fullscreenHref="/projects/momentum/index.html"
-              height={620}
+              height={820}
               phone
             />
           )}
 
           {tab === 'style' && (
             <HtmlEmbed
-              title="Style-Adaptive Extraction"
-              blurb="Explore how adaptive extraction choices change what a model surfaces from tissue tiles."
+              title="Style-Adaptive Clinical Note Extraction"
+              blurb="Physicians write differently — terse, narrative, or hedged. Classify the style first, then extract with a prompt adapted to that voice."
               src="/projects/style-adaptive/index.html"
               caseHref="/work/style-adaptive-extraction"
               caseLabel="Style Adaptive case study"
               fullscreenHref="/projects/style-adaptive/index.html"
-              height={640}
+              height={820}
             />
           )}
 
@@ -256,18 +256,14 @@ function HtmlEmbed({
       </div>
 
       {phone ? (
-        <div className="mx-auto flex justify-center py-2">
-          <div className="relative w-full max-w-[320px] overflow-hidden rounded-[1.75rem] border-[5px] border-foreground/80 bg-[#0b1220] shadow-2xl shadow-primary/10">
-            <div className="absolute inset-x-0 top-0 z-10 flex justify-center bg-[#0b1220]/80 py-1.5">
-              <span className="h-1 w-10 rounded-full bg-white/25" />
-            </div>
-            <iframe
-              title={title}
-              src={src}
-              className="h-[580px] w-full border-0 bg-[#0b1220]"
-              loading="lazy"
-            />
-          </div>
+        // No extra hardware bezel — the HTML already draws its own phone chrome.
+        <div className="mx-auto w-full max-w-[440px] overflow-hidden rounded-2xl bg-[#d8d3cc] dark:bg-[#0a0810]">
+          <iframe
+            title={title}
+            src={src}
+            className="h-[min(78vh,820px)] w-full border-0"
+            loading="lazy"
+          />
         </div>
       ) : (
         <iframe
@@ -328,7 +324,7 @@ function SkillsoftCarousel() {
         <img
           src={slide.src}
           alt={slide.label}
-          className="mx-auto max-h-[480px] w-full object-contain"
+          className="mx-auto max-h-[620px] w-full object-contain"
         />
       </div>
 

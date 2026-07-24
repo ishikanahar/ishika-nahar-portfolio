@@ -19,7 +19,7 @@ export function HomeCta() {
         />
         <div className="relative mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-24">
           <h2 className="font-display text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-            Let&apos;s build something reliable together
+            Let&apos;s build the things we wish already existed.
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground text-pretty sm:text-lg">
             Open to Applied AI, ML, and Data Science internships for Fall 2026 and

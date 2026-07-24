@@ -58,8 +58,9 @@ export function ConceptImplementationCard({
         <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-full border border-border bg-background text-primary transition-colors group-hover:border-primary group-hover:bg-primary/10">
           <ChevronDown
             className={cn(
-              'size-4 transition-transform',
-              open && 'rotate-180',
+              'size-4 transition-transform duration-200',
+              // Closed → right, open → down (content expands below)
+              !open && '-rotate-90',
             )}
           />
         </span>

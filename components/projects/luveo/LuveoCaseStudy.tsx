@@ -123,7 +123,7 @@ export function LuveoCaseStudy() {
               <iframe
                 title="Luveo Compliance Copilot Explorer"
                 src="/projects/luveo/explorer.html"
-                className="h-[min(70vh,520px)] w-full"
+                className="h-[min(85vh,820px)] w-full"
                 loading="lazy"
               />
             </div>

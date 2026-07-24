@@ -53,6 +53,21 @@ body {
   padding: 20px 0; transition: background 0.3s;
 }
 
+/* Embedded in portfolio: fill the iframe, keep a single phone chrome (no outer site bezel). */
+html.embed body {
+  min-height: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 12px 0;
+  overflow: hidden;
+}
+html.embed .phone {
+  width: min(390px, 100%);
+  height: min(844px, calc(100vh - 24px));
+  max-height: 100%;
+  box-shadow: 0 0 0 10px #1a1a1a, 0 0 0 12px #3a3a3a, 0 16px 40px rgba(0,0,0,0.35);
+}
+
 /* ── PHONE SHELL ── */
 .phone {
   width: 390px; height: 844px;
@@ -751,6 +766,12 @@ body {
   }
 }
 </style>
+<script>
+  // Portfolio iframe: ?embed=1 → tighter layout, single phone chrome
+  if (new URLSearchParams(location.search).has('embed')) {
+    document.documentElement.classList.add('embed');
+  }
+</script>
 </head>
 <body>
 
